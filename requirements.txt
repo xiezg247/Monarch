@@ -1,0 +1,50 @@
+# Python 3.6.6
+# code format
+flake8==3.7.7
+
+# Bleeding edge Flask
+Flask==1.1.1
+
+# Your custom requirements go here
+
+# database
+PyMySQL==0.9.2
+
+# Sentry
+raven==6.9.0
+
+# http
+requests==2.19.1
+
+# Cache
+Flask-Redis==0.3.0
+
+# Queue
+Flask-Celery==2.4.3
+
+# migration
+alembic==1.0.0
+Flask-Migrate==2.2.1
+
+# orm
+Flask-SQLAlchemy==2.3.2
+
+# script
+Flask-Script==2.0.6
+
+# signal
+blinker==1.4
+
+# WSGI Handler
+# ------------------------------------------------
+gevent==1.4.0
+gunicorn==19.7.1
+
+# form validate
+marshmallow==2.19.2
+
+# api doc
+flask_restplus==0.12.1
+
+# flask session
+Flask-Session==0.3.1
