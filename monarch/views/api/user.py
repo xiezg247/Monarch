@@ -1,8 +1,8 @@
 from flask import request
-from flask_restplus import Resource, Namespace, fields
+from flask_restplus import Resource, Namespace
 from flask_restplus._http import HTTPStatus
 
-from monarch.forms.api.user import CreateUserSchema, UpdateUserSchema
+from monarch.forms.api.user import CreateUserSchema, UpdateUserSchema, QueryUserSchema
 
 from monarch.service.user import (
     get_users,
@@ -14,21 +14,15 @@ from monarch.service.user import (
 
 from monarch.utils.api import biz_success
 from monarch.exc import codes
+from monarch.utils.common import expect_schema
 
-
-class UserDto:
-    ns = Namespace("user", description="用户接口")
-    user = ns.model("user", {"name": fields.String(required=True, description="用户姓名")})
-
-
-ns = UserDto.ns
+ns = Namespace("user", description="用户接口")
 
 
 @ns.route("")
 class UserList(Resource):
     @ns.doc("查找所有用户")
-    @ns.response(model=UserDto.user, code=HTTPStatus.OK.value, description="成功查找用户")
-    @ns.response(code=HTTPStatus.NOT_FOUND.value, description="暂无用户")
+    @expect_schema(ns, QueryUserSchema())
     def get(self):
         """查找所有用户 """
         return get_users()
@@ -36,7 +30,6 @@ class UserList(Resource):
     @ns.response(code=HTTPStatus.OK.value, description="成功创建用户")
     @ns.response(code=HTTPStatus.NOT_FOUND.value, description="暂无用户")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
-    @ns.expect(UserDto.user)
     @ns.doc("创建用户信息")
     def post(self):
         """创建用户信息"""
@@ -65,7 +58,6 @@ class User(Resource):
     @ns.response(code=HTTPStatus.OK.value, description="成功更新用户")
     @ns.response(code=HTTPStatus.NOT_FOUND.value, description="暂无用户")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
-    @ns.expect(UserDto.user)
     @ns.doc("更新用户信息")
     def put(self, uid):
         """更新用户信息"""
