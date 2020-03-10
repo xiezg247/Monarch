@@ -1,9 +1,7 @@
-from flask import request
+from flask import g
 from flask_restplus import Resource, Namespace
 from flask_restplus._http import HTTPStatus
 
-from monarch.utils.api import biz_success
-from monarch.exc import codes
 from monarch.service.admin.company import (
     get_a_company,
     get_companies,
@@ -17,7 +15,7 @@ from monarch.forms.admin.company import (
     EditCompanyMenuSchema,
     CompanyResetPasswordSchema)
 
-from monarch.utils.common import check_admin_login
+from monarch.utils.common import check_admin_login, expect_schema
 
 
 class CompanyDto:
@@ -32,28 +30,20 @@ class CompanyList(Resource):
     @ns.doc("公司列表")
     @ns.response(code=HTTPStatus.OK.value, description="成功")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
+    @expect_schema(ns, SearchCompanySchema())
     @check_admin_login
     def get(self):
         """公司列表"""
-        data, errors = SearchCompanySchema().load(request.args)
-        if errors:
-            return biz_success(code=codes.CODE_BAD_REQUEST,
-                               http_code=codes.CODE_BAD_REQUEST,
-                               data=errors)
-        return get_companies(data)
+        return get_companies(g.data)
 
+    @ns.doc("创建公司信息")
     @ns.response(code=HTTPStatus.OK.value, description="成功")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
-    @ns.doc("创建公司信息")
+    @expect_schema(ns, CreateCompanySchema(), location="json")
     @check_admin_login
     def post(self):
         """创建公司信息"""
-        data, errors = CreateCompanySchema().load(request.json)
-        if errors:
-            return biz_success(code=codes.CODE_BAD_REQUEST,
-                               http_code=codes.CODE_BAD_REQUEST,
-                               data=errors)
-        return create_company(data)
+        return create_company(g.data)
 
 
 @ns.route("/<company_id>")
@@ -70,33 +60,23 @@ class Company(Resource):
     @ns.response(code=HTTPStatus.OK.value, description="成功")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
     @ns.doc("更新公司信息")
+    @expect_schema(ns, EditCompanySchema(), location="json")
     @check_admin_login
     def put(self, company_id):
         """更新公司信息"""
-        data, errors = EditCompanySchema().load(request.json)
-        if errors:
-            return biz_success(code=codes.CODE_BAD_REQUEST,
-                               http_code=codes.CODE_BAD_REQUEST,
-                               data=errors)
-
         return
 
 
 @ns.route("/<company_id>/reset_password")
 @ns.param("company_id", "公司ID")
 class CompanyResetPassword(Resource):
+    @ns.doc("重置公司管理员密码")
     @ns.response(code=HTTPStatus.OK.value, description="成功")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
-    @ns.doc("重制公司管理员密码")
+    @expect_schema(ns, CompanyResetPasswordSchema(), location="json")
     @check_admin_login
     def put(self, company_id):
         """重制公司管理员密码"""
-        data, errors = CompanyResetPasswordSchema().load(request.json)
-        if errors:
-            return biz_success(code=codes.CODE_BAD_REQUEST,
-                               http_code=codes.CODE_BAD_REQUEST,
-                               data=errors)
-
         return
 
 
@@ -114,13 +94,8 @@ class CompanyMenu(Resource):
     @ns.response(code=HTTPStatus.OK.value, description="成功")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
     @ns.doc("更新公司菜单信息")
+    @expect_schema(ns, EditCompanyMenuSchema(), location="json")
     @check_admin_login
     def put(self, company_id):
         """更新公司信息"""
-        data, errors = EditCompanyMenuSchema().load(request.json)
-        if errors:
-            return biz_success(code=codes.CODE_BAD_REQUEST,
-                               http_code=codes.CODE_BAD_REQUEST,
-                               data=errors)
-
         return

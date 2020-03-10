@@ -8,13 +8,16 @@ class AppMenu(Base, TimestampMixin):
     __tablename__ = "app_menu"
 
     id = Column(
-        Integer(), nullable=False, autoincrement=True, primary_key=True, comment="菜单ID",
+        Integer(), nullable=False, autoincrement=True, primary_key=True, comment="自增长ID",
     )
 
     app_id = Column(Integer, nullable=False, default=0, comment="应用ID")
 
     name = Column(String(32), nullable=False, comment="菜单名称")
-    parent_id = Column(Integer, nullable=False, default=0, comment="父级菜单ID")
+    parent_id = Column(String(32), nullable=False, default="", comment="父级菜单ID")
+    menu_id = Column(String(32), nullable=False, default="", comment="菜单ID")
+    remark = Column(String(128), nullable=False, comment="备注")
+    route_name = Column(String(128), nullable=False, default="/", comment="路由")
 
     @staticmethod
     def menu_list_to_tree(menu_list):

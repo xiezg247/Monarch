@@ -230,11 +230,14 @@ def upgrade():
             nullable=False,
             autoincrement=True,
             primary_key=True,
-            comment="菜单ID",
+            comment="自增长ID",
         ),
         Column("app_id", Integer, nullable=False, default=0, comment="应用ID"),
         Column("name", String(32), nullable=False, comment="菜单名称"),
-        Column("parent_id", Integer, nullable=False, default=0, comment="父级菜单ID"),
+        Column("parent_id", String(32), nullable=False, default="", comment="父级菜单ID"),
+        Column("menu_id", String(32), nullable=False, default="", comment="菜单ID"),
+        Column("remark", String(128), nullable=False, comment="备注"),
+        Column("route_name", String(128), nullable=False, default="/", comment="路由")
     )
 
     op.create_table(

@@ -35,12 +35,12 @@ def check_admin_login(view):
     return wrapper
 
 
-def get_schema_doc_params(schema):
+def get_schema_doc_params(schema, location):
     """将 marshmallow 的 schema 转换成 flask-restful 能识别的doc
 
     额外定义shema参数
         doc_type: 文档中要展示的数据类型, string, bool, integer, 默认为schema的类型
-        doc_location: 文档中的http数据来源 query, header, formData, body, cookie, 默认为query
+        doc_location: 文档中的http数据来源 query, header, formData, body, cookie, json, 默认为query
     示例:
         class TestSchema(Schema):
             name = fields.Str(required=True, allow_none=False, doc_location="query")
@@ -48,29 +48,32 @@ def get_schema_doc_params(schema):
 
     Args:
         schema: marshmallow 的 schema 实例
+        location: http数据来源 query, header, formData, body, cookie, json, 默认为query
     """
     params = {}
     for field_name in schema.declared_fields:
         field = schema.fields[field_name]
         doc_type = field.metadata.get("doc_type", field.__class__.__name__.lower())
-        doc_location = field.metadata.get("doc_location", "query")
-        params[field.name] = {"type": doc_type,
-                              "in": doc_location,
-                              "required": field.required,
-                              "description": field.metadata.get("description")}
+        doc_location = field.metadata.get("doc_location", location)
+        params[field.name] = {
+            "type": doc_type,
+            "in": doc_location,
+            "required": field.required,
+            "description": field.metadata.get("description")
+        }
     return params
 
 
-def doc_schema(namespace, schema):
+def doc_schema(namespace, schema, location):
     """添加schema到doc """
-    params = get_schema_doc_params(schema)
+    params = get_schema_doc_params(schema, location)
     return namespace.doc(params=params)
 
 
-def expect_schema(namespace, schema):
+def expect_schema(namespace, schema, location="query"):
     """类似flask-restful的expect"""
     def wrapper(view):
-        view = doc_schema(namespace, schema)(view)
+        view = doc_schema(namespace, schema, location)(view)
         return form_validate(schema)(view)
 
     return wrapper

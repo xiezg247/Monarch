@@ -8,7 +8,7 @@ from monarch.views.admin.oauth2 import ns as oauth2_ns
 
 
 def register_admin_conf_center(app):
-    blueprint = Blueprint("admin", __name__, url_prefix="/admin/v1")
+    blueprint = Blueprint("admin", __name__, url_prefix="/conf_center/v1")
     api = Api(
         blueprint,
         title="New API",
