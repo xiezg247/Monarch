@@ -48,6 +48,10 @@ class OAuthApp(Base, TimestampMixin):
             query = query.filter(cls.name.like("%" + escape_like(name) + "%"))
         return query
 
+    @classmethod
+    def get_by_client_id(cls, client_id, deleted=False):
+        return cls.query.filter(cls.client_id == client_id, cls.deleted == deleted).first()
+
 
 class OAuthAuthorize(Base, TimestampMixin):
     """授权码"""

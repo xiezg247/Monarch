@@ -1,7 +1,7 @@
 from flask_restplus import Resource, Namespace
 from flask_restplus._http import HTTPStatus
 
-from monarch.service.admin.menu import menu_template
+from monarch.service.admin.permission import menu_template
 from monarch.utils.common import check_admin_login
 
 

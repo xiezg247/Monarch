@@ -1,6 +1,10 @@
+from flask import g
 from flask_restplus import Resource, Namespace
 from flask_restplus._http import HTTPStatus
 
+from monarch.forms.partner.permission import PermissionInitSchema
+from monarch.service.partner.pemission import init_permission
+from monarch.utils.common import expect_schema
 
 ns = Namespace("permission", description="权限上报接口")
 
@@ -10,13 +14,14 @@ class PermissionInit(Resource):
     @ns.doc("初始化权限")
     @ns.response(code=HTTPStatus.OK.value, description="成功初始化权限")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
+    @expect_schema(ns, PermissionInitSchema())
     def post(self):
-        """成功初始化权限"""
-        return
+        """初始化权限"""
+        return init_permission(g.data)
 
 
 @ns.route("")
-class Permission(Resource):
+class PermissionDto(Resource):
     @ns.doc("获取权限列表")
     @ns.response(code=HTTPStatus.OK.value, description="成功获取权限列表")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")

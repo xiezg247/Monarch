@@ -209,7 +209,7 @@ def upgrade():
     )
 
     op.create_table(
-        "app_menu",
+        "app_permission",
         Column(
             "created_at",
             DateTime(),
@@ -235,9 +235,9 @@ def upgrade():
             comment="自增长ID",
         ),
         Column("app_id", Integer, nullable=False, default=0, comment="应用ID"),
-        Column("name", String(32), nullable=False, comment="菜单名称"),
-        Column("parent_id", String(32), nullable=False, default="", comment="父级菜单ID"),
-        Column("menu_id", String(32), nullable=False, default="", comment="菜单ID"),
+        Column("name", String(32), nullable=False, comment="权限名称"),
+        Column("parent_id", String(32), nullable=False, default="", comment="父级权限ID"),
+        Column("permission_id", String(32), nullable=False, default="", comment="权限ID"),
         Column("remark", String(128), nullable=False, comment="备注"),
         Column("route_name", String(128), nullable=False, default="/", comment="路由")
     )
@@ -369,6 +369,9 @@ def upgrade():
         ),
         Column("company_id", Integer, nullable=False, comment="公司ID"),
         Column("name", String(32), nullable=False, comment="角色名称"),
+        Column("description", String(500), comment="角色描述"),
+        Column("permission", JSON, nullable=False, default=[], comment="角色菜单权限"),
+        Column("is_admin", Boolean(), nullable=False, default=False, comment="是否管理员"),
     )
 
 
@@ -382,7 +385,7 @@ def downgrade():
     op.drop_table("company_admin_user")
 
     op.drop_table("company_app")
-    op.drop_table("app_menu")
+    op.drop_table("app_permission")
     op.drop_table("company_robot")
 
     op.drop_table("user")

@@ -3,7 +3,7 @@ from flask import Blueprint
 from flask_restplus import Api
 from monarch.views.admin.company import ns as company_ns
 from monarch.views.admin.admin_user import ns as admin_user_ns
-from monarch.views.admin.menu import ns as menu_ns
+from monarch.views.admin.permission import ns as menu_ns
 from monarch.views.admin.oauth2 import ns as oauth2_ns
 
 

@@ -38,13 +38,6 @@ class User(Base, TimestampMixin):
         "password", String(128), nullable=False, default=None, comment="密码"
     )
 
-    roles = relationship(
-        "Role",
-        secondary="user_role",
-        primaryjoin="User.id==UserRole.user_id",
-        secondaryjoin="Role.id==UserRole.role_id",
-    )
-
     company = relationship(
         "Company",
         uselist=False,
@@ -82,6 +75,16 @@ class User(Base, TimestampMixin):
         self.save()
         return True
 
+    @property
+    def roles(self):
+        return Role.query.join(
+            UserRole, UserRole.role_id == Role.id
+        ).join(
+            User, User.id == UserRole.user_id
+        ).filter(
+            User.id == self.id
+        ).all()
+
 
 class UserRole(Base, TimestampMixin):
     """客服角色表"""
@@ -98,3 +101,6 @@ class UserRole(Base, TimestampMixin):
 
     user_id = Column(String(32), nullable=False, comment="客服ID")
     role_id = Column(Integer, nullable=False, comment="角色ID")
+
+
+from monarch.models.role import Role

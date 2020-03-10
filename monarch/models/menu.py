@@ -2,10 +2,10 @@ from monarch.models.base import Base, TimestampMixin
 from sqlalchemy import Column, String, Integer
 
 
-class AppMenu(Base, TimestampMixin):
+class AppPermission(Base, TimestampMixin):
     """应用菜单表"""
 
-    __tablename__ = "app_menu"
+    __tablename__ = "app_permission"
 
     id = Column(
         Integer(), nullable=False, autoincrement=True, primary_key=True, comment="自增长ID",
@@ -13,9 +13,9 @@ class AppMenu(Base, TimestampMixin):
 
     app_id = Column(Integer, nullable=False, default=0, comment="应用ID")
 
-    name = Column(String(32), nullable=False, comment="菜单名称")
-    parent_id = Column(String(32), nullable=False, default="", comment="上报父级菜单ID")
-    menu_id = Column(String(32), nullable=False, default="", comment="上报菜单ID")
+    name = Column(String(32), nullable=False, comment="权限名称")
+    parent_id = Column(String(32), nullable=False, default="", comment="上报父级权限ID")
+    permission_id = Column(String(32), nullable=False, default="", comment="上报权限ID")
     remark = Column(String(128), nullable=False, comment="备注")
     route_name = Column(String(128), nullable=False, default="/", comment="路由")
 
@@ -39,5 +39,5 @@ class AppMenu(Base, TimestampMixin):
         return menus
 
     @classmethod
-    def get_by_name_and_parent_id(cls, name, parent_id):
-        return cls.query.filter(cls.name == name, cls.parent_id == parent_id).first()
+    def gets_by_app_id(cls, app_id, deleted=False):
+        return cls.query.filter(cls.app_id == app_id, cls.deleted == deleted).all()
