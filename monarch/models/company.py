@@ -201,6 +201,7 @@ class CompanyApp(Base, TimestampMixin):
     company_id = Column(Integer, nullable=False, comment="公司ID")
     app_id = Column(Integer, nullable=False, default=0, comment="应用ID")
     status = Column(Integer, nullable=False, comment="启用状态")
+    expired_at = Column(DateTime(), default=datetime.now, comment="到期日期")
 
 
 # 放在最后避免循环引入问题

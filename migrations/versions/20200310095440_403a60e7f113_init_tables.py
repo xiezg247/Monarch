@@ -205,6 +205,7 @@ def upgrade():
         Column("company_id", Integer, nullable=False, comment="公司ID"),
         Column("app_id", Integer, nullable=False, default=0, comment="应用ID"),
         Column("status", Integer, nullable=False, default=0, comment="状态"),
+        Column("expired_at", DateTime(), default=datetime.now, comment="到期日期"),
     )
 
     op.create_table(
