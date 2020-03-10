@@ -1,6 +1,6 @@
 from monarch.corelibs.store import db
 from monarch.models.oauth2 import OAuthApp
-from monarch.models.menu import AppPermission
+from monarch.models.permission import AppPermission
 from monarch.utils.api import Bizs
 
 

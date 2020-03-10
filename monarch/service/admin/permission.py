@@ -1,5 +1,5 @@
 from monarch.forms.admin.permission import MenuSchema
-from monarch.models.menu import AppPermission
+from monarch.models.permission import AppPermission
 from monarch.utils.api import biz_success
 
 
