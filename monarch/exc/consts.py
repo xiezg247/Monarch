@@ -6,6 +6,7 @@ DEFAULT_FAIL = -1
 # Cache Time
 CACHE_FIVE_SECONDS = 5
 CACHE_MINUTE = 60
+CACHE_FIVE_MINUTE = 60 * 5
 CACHE_HALF_HOUR = 60 * 30
 CACHE_HOUR = 60 * 60
 CACHE_TWELVE_HOUR = 60 * 60 * 12
@@ -23,3 +24,7 @@ CACHE_COMPANY_ALL = "monarch:company:all"
 # User #
 CACHE_USER_BY_ID = "monarch:user:id:{_id}"
 CACHE_USER_BY_ACCOUNT = "monarch:user:account:{account}"
+
+# AdminUser
+CACHE_ADMIN_USER_TOKEN = "monarch:admin_user:token:{}"  # 管理员token缓存
+CACHE_ADMIN_USER_CAPTCHA = "monarch:admin_user:captcha:{}"  # 管理员登录验证码缓存

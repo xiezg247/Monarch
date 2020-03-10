@@ -21,8 +21,7 @@ from monarch.exc import codes
 
 from monarch.utils.api import http_fail
 
-from monarch.views import register_internal_app
-from monarch.views.api import register_api
+from monarch.views.admin import register_admin_conf_center
 
 from monarch import config
 
@@ -74,8 +73,7 @@ def create_app(name=None, _config=None):
     setup_before_request(app)
     setup_after_request(app)
 
-    register_internal_app(app)
-    register_api(app)
+    register_admin_conf_center(app)
     setup_errorhandler(app)
 
     return app
