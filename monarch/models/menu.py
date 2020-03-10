@@ -14,8 +14,8 @@ class AppMenu(Base, TimestampMixin):
     app_id = Column(Integer, nullable=False, default=0, comment="应用ID")
 
     name = Column(String(32), nullable=False, comment="菜单名称")
-    parent_id = Column(String(32), nullable=False, default="", comment="父级菜单ID")
-    menu_id = Column(String(32), nullable=False, default="", comment="菜单ID")
+    parent_id = Column(String(32), nullable=False, default="", comment="上报父级菜单ID")
+    menu_id = Column(String(32), nullable=False, default="", comment="上报菜单ID")
     remark = Column(String(128), nullable=False, comment="备注")
     route_name = Column(String(128), nullable=False, default="/", comment="路由")
 

@@ -35,6 +35,7 @@ class OAuthApp(Base, TimestampMixin):
     # 这一期暂不做限制
     scopes = Column(Integer(), nullable=False, default=0, comment="申请的权限的位图，默认无权限")
     white_list = Column(Boolean(), nullable=False, default=False, comment="是否是白名单")
+    is_default = Column(Boolean(), nullable=False, default=False, comment="是否默认主页应用")
 
     @classmethod
     def query_oauth_app(cls, name, deleted=False):

@@ -34,6 +34,7 @@ CREATE TABLE `o_auth_app` (
   `status` bigint(20) NOT NULL DEFAULT '0',
   `scopes` bigint(20) NOT NULL DEFAULT '0',
   `white_list` tinyint(1) DEFAULT '0' NOT NULL,
+  `is_default` tinyint(1) DEFAULT '0' NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_client_id` (`client_id`),
   UNIQUE KEY `uq_client_secret` (`client_secret`),
