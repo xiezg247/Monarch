@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, JSON
+from sqlalchemy import Column, Integer, String, JSON, Boolean
 from sqlalchemy.orm import relationship
 
 from monarch.models.base import Base, TimestampMixin
@@ -17,6 +17,7 @@ class Role(Base, TimestampMixin):
     name = Column(String(32), nullable=False, comment="角色名称")
     description = Column(String(500), comment="角色描述")
     permission = Column(JSON, nullable=False, default=[], comment="角色菜单权限")
+    is_admin = Column(Boolean(), nullable=False, default=False, comment="是否管理员")
 
     users = relationship(
         "User",
@@ -42,17 +43,3 @@ class Role(Base, TimestampMixin):
         if role_ids:
             roles = cls.query.filter(cls.id.in_(role_ids)).all()
         return roles
-
-    def get_menus_tree(self):
-        company_menus = CompanyMenu.get_menus_by_company_id(self.company_id)
-        menu_id_set = set(self.permission)
-        menu_list = []
-        for menu in company_menus:
-            menu_data = menu.to_dict(["id", "name", "parent_id"])
-            menu_data["permission"] = menu_data.get("id") in menu_id_set
-            menu_list.append(menu_data)
-        return Menu.menu_list_to_tree(menu_list)
-
-
-from monarch.models.company import CompanyMenu
-from monarch.models.menu import Menu

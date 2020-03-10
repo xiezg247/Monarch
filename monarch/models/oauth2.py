@@ -1,4 +1,3 @@
-"""后续把登录验证抽离出去"""
 from monarch.models.base import Base, TimestampMixin
 from sqlalchemy import Column, String, Integer, Boolean, Index
 

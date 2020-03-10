@@ -2,7 +2,7 @@ import shortuuid
 from datetime import datetime
 
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import (Column, Integer, String, JSON, DateTime, UniqueConstraint)
+from sqlalchemy import (Column, Integer, String, DateTime, UniqueConstraint)
 
 from monarch.corelibs.cache_decorator import cache
 from monarch.models.base import Base, TimestampMixin, model_cache
@@ -37,7 +37,6 @@ class Company(Base, TimestampMixin):
     name = Column(String(128), nullable=True, comment="公司名称")
     expired_at = Column(DateTime(), default=datetime.now, comment="到期日期")
     remark = Column(String(255), nullable=True, comment="企业描述")
-    status = Column(Integer, nullable=False, default=0, comment="开启状态")
     logo = Column(String(255), nullable=True, default=None, comment="企业logo")
 
     @classmethod
@@ -72,16 +71,8 @@ class Company(Base, TimestampMixin):
             code=shortuuid.uuid(),
             name=company_data.get("name"),
             expired_at=company_data.get("expired_at"),
-            status=company_data.get("status"),
             remark=company_data.get("remark"),
         )
-
-        # 公司菜单权限
-        db.session.add(CompanyMenu.create(
-            company_id=company.id,
-            permission=permission_data,
-            _commit=False
-        ))
 
         # 公司对应的智言运营
         db.session.add(CompanyAdminUser.create(
@@ -90,25 +81,42 @@ class Company(Base, TimestampMixin):
             _commit=False
         ))
 
-        # 公司管理员
+        # 公司管理员/菜单权限
+        role = cls.create(
+            company_id=company.id,
+            name="超级管理员",
+            description="超级管理员",
+            permission=permission_data,
+            is_admin=True
+        )
+
+        # 企业账号
+        user_id = shortuuid.uuid()
         db.session.add(User.create(
-            id=shortuuid.uuid(),
+            id=user_id,
             company_id=company.id,
             account=company_data.get("email"),
             password=company_data.get("password"),
             username="admin",
             nickname="admin",
-            is_admin=True,
             enabled=True,
             _commit=False
         ))
 
-        # 统一提交 错误回滚 回滚后需要删除已创建的公司信息
+        # 公司管理员
+        db.session.add(UserRole.create(
+            user_id=user_id,
+            role_id=role.id,
+            _commit=False
+        ))
+
+        # 统一提交 错误回滚 回滚后需要删除已创建的公司信息/角色信息
         try:
             db.session.commit()
         except IntegrityError:
             db.session.rollback()
             company.delete(_hard=True)
+            role.delete(_hard=True)
             raise
         return company
 
@@ -120,35 +128,6 @@ class Company(Base, TimestampMixin):
     def _clean_cache(self):
         mc.delete(CACHE_COMPANY.format(id=self.id))
         mc.delete(CACHE_COMPANY_ALL)
-
-
-class CompanyMenu(Base, TimestampMixin):
-    """公司菜单表"""
-
-    __tablename__ = "company_menu"
-
-    id = Column(
-        Integer(),
-        nullable=False,
-        autoincrement=True,
-        primary_key=True,
-        comment="公司菜单ID",
-    )
-
-    company_id = Column(Integer, nullable=False, comment="公司ID")
-    permission = Column(JSON, nullable=False, default=[], comment="公司菜单权限")
-
-    @classmethod
-    def get_by_company_id(cls, company_id, deleted=False):
-        return cls.query.filter(
-            cls.company_id == company_id, cls.deleted == deleted
-        ).first()
-
-    @classmethod
-    def get_menus_by_company_id(cls, company_id, deleted=False):
-        menu = cls.get_by_company_id(company_id)
-        menus = Menu.get_menus_by_ids(menu.permission, deleted)
-        return menus
 
 
 class CompanyRobot(Base, TimestampMixin):
@@ -203,6 +182,26 @@ class CompanyAdminUser(Base, TimestampMixin):
     admin_user_id = Column(String(32), nullable=False, default=None, comment="管理负责人ID")
 
 
+class CompanyApp(Base, TimestampMixin):
+    """公司应用"""
+    __tablename__ = "company_app"
+
+    # status
+    STATUS_ON = 1  # 启用
+    STATUS_OFF = 2  # 禁用
+
+    id = Column(
+        Integer(),
+        nullable=False,
+        autoincrement=True,
+        primary_key=True,
+        comment="公司应用ID",
+    )
+
+    company_id = Column(Integer, nullable=False, comment="公司ID")
+    app_id = Column(Integer, nullable=False, default=0, comment="应用ID")
+    status = Column(Integer, nullable=False, comment="启用状态")
+
+
 # 放在最后避免循环引入问题
-from monarch.models.menu import Menu
-from monarch.models.user import User
+from monarch.models.user import User, UserRole

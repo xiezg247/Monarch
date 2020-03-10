@@ -1,6 +1,3 @@
-import operator
-from functools import reduce
-
 import shortuuid
 from sqlalchemy import Index, Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
@@ -35,7 +32,6 @@ class User(Base, TimestampMixin):
     avatar = Column(String(255), nullable=True, default=None, comment="用户头像")
     mobile = Column(String(16), nullable=True, comment="手机号码")
     enabled = Column(Boolean(), nullable=False, default=False, comment="是否禁止")
-    is_admin = Column(Boolean(), nullable=False, default=False, comment="是否管理员")
 
     # password 为 表字段 的名字，实则为了解决赋值时直接将 password 赋值给模型（password字段不存在，所以无法赋值）,为了加密
     _password = Column(
@@ -86,36 +82,6 @@ class User(Base, TimestampMixin):
         self.save()
         return True
 
-    @classmethod
-    def query_user(cls, company_id, enabled=None, role_id=None, is_online=None, deleted=False):
-        query = cls.query.filter(
-            cls.deleted == deleted,
-            cls.company_id == company_id
-        ).order_by(
-            User.created_at.desc()
-        )
-        if role_id is not None:
-            query = query.join(UserRole, UserRole.user_id == User.id).filter(
-                UserRole.role_id == role_id
-            )
-        if enabled is not None:
-            query = query.filter(cls.enabled == enabled)
-
-        if is_online is not None:
-            query = query.filter(cls.is_online == is_online)
-
-        return query
-
-    def get_menu_ids(self):
-        if self.is_admin:
-            return CompanyMenu.get_by_company_id(self.company_id).permission
-        menu_ids = []
-        if self.roles:
-            menu_ids = list(
-                reduce(operator.or_, (set(item.permission) for item in self.roles))
-            )
-        return menu_ids
-
 
 class UserRole(Base, TimestampMixin):
     """客服角色表"""
@@ -130,8 +96,5 @@ class UserRole(Base, TimestampMixin):
         comment="客服角色ID",
     )
 
-    user_id = Column(String(32), nullable=False, comment="客户ID")
+    user_id = Column(String(32), nullable=False, comment="客服ID")
     role_id = Column(Integer, nullable=False, comment="角色ID")
-
-
-from monarch.models.company import CompanyMenu
