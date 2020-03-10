@@ -15,3 +15,11 @@ CACHE_MONTH = 60 * 60 * 24 * 30
 
 # Request Timeout
 REQUESTS_TIMEOUT = 15
+
+# company
+CACHE_COMPANY = "monarch:company:id:{id}"
+CACHE_COMPANY_ALL = "monarch:company:all"
+
+# User #
+CACHE_USER_BY_ID = "monarch:user:id:{_id}"
+CACHE_USER_BY_ACCOUNT = "monarch:user:account:{account}"
