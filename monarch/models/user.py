@@ -85,6 +85,18 @@ class User(Base, TimestampMixin):
             User.id == self.id
         ).all()
 
+    @classmethod
+    def get_admin_role_by_company_id(cls, company_id, is_admin=True, deleted=False):
+        return cls.query.join(
+            UserRole, UserRole.user_id == cls.id
+        ).join(
+            Role, UserRole.role_id == Role.id
+        ).filter(
+            Role.is_admin == is_admin,
+            cls.company_id == company_id,
+            cls.deleted == deleted
+        ).first()
+
 
 class UserRole(Base, TimestampMixin):
     """客服角色表"""

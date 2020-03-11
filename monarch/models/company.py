@@ -1,7 +1,7 @@
 import shortuuid
 from datetime import datetime
 
-from sqlalchemy import (Column, Integer, String, DateTime, UniqueConstraint)
+from sqlalchemy import (Column, Integer, String, DateTime)
 
 from monarch.corelibs.cache_decorator import cache
 from monarch.models.base import Base, TimestampMixin, model_cache
@@ -11,7 +11,6 @@ from monarch.exc.consts import (
     CACHE_COMPANY_ALL,
     CACHE_COMPANY,
 )
-from monarch.utils.api import parse_pagination
 from monarch.corelibs.mcredis import mc
 
 
@@ -73,41 +72,6 @@ class Company(Base, TimestampMixin):
         mc.delete(CACHE_COMPANY_ALL)
 
 
-class CompanyRobot(Base, TimestampMixin):
-    """公司机器人配置表"""
-
-    __tablename__ = "company_robot"
-    __table_args__ = (UniqueConstraint("robot_url", "robot_key"), UniqueConstraint("company_id", "name"))
-
-    id = Column(
-        String(32),
-        nullable=False,
-        primary_key=True,
-        default=shortuuid.uuid,
-        comment="公司机器人配置ID",
-    )
-
-    company_id = Column(Integer, nullable=False, comment="公司ID")
-    name = Column(String(128), nullable=False, default=None, comment="机器人名称")
-    robot_url = Column(String(255), nullable=False, default=None, comment="机器人地址")
-    robot_version = Column(String(128), default=None, comment="机器人版本")
-    robot_key = Column(String(128), default=None, comment="机器人对接key")
-    status = Column(Integer, nullable=False, default=0, comment="启用(绑定)状态")
-
-    @classmethod
-    def get_list_by_company_id(cls, company_id):
-        query = cls.query_by_exist().filter_by(company_id=company_id).order_by(cls.created_at.desc())
-        return parse_pagination(query)
-
-    @classmethod
-    def get_by_company_id_and_name(cls, company_id, name):
-        return cls.query_by_exist().filter_by(company_id=company_id, name=name).first()
-
-    @classmethod
-    def get_by_robot_url_and_robot_key(cls, robot_url, robot_key):
-        return cls.query_by_exist().filter_by(robot_url=robot_url, robot_key=robot_key).first()
-
-
 class CompanyAdminUser(Base, TimestampMixin):
     """公司管理负责人表"""
 
@@ -145,6 +109,43 @@ class CompanyApp(Base, TimestampMixin):
     app_id = Column(Integer, nullable=False, default=0, comment="应用ID")
     status = Column(Integer, nullable=False, comment="启用状态")
     expired_at = Column(DateTime(), default=datetime.now, comment="到期日期")
+
+    @classmethod
+    def get_by_company_id(cls, company_id, app_id, deleted=False):
+        return cls.query.filter(
+            cls.company_id == company_id,
+            cls.app_id == app_id,
+            cls.deleted == deleted
+        ).first()
+
+
+class CompanyAppRobot(Base, TimestampMixin):
+    """公司机器人配置表"""
+
+    __tablename__ = "company_app_robot"
+
+    id = Column(
+        String(32),
+        nullable=False,
+        primary_key=True,
+        default=shortuuid.uuid,
+        comment="公司机器人配置ID",
+    )
+
+    company_id = Column(Integer, nullable=False, comment="公司ID")
+    app_id = Column(Integer, nullable=False, comment="应用ID")
+    robot_url = Column(String(255), nullable=False, default=None, comment="机器人地址")
+    robot_version = Column(String(128), default=None, comment="机器人版本")
+    robot_key = Column(String(128), default=None, comment="机器人对接key")
+    # TODO(xzg): 校验robot
+
+    @classmethod
+    def get_by_company_app_id(cls, company_id, app_id, deleted=False):
+        return cls.query.filter(
+            cls.company_id == company_id,
+            cls.app_id == app_id,
+            cls.deleted == deleted
+        ).first()
 
 
 # 放在最后避免循环引入问题

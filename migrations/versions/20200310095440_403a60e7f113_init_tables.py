@@ -243,43 +243,6 @@ def upgrade():
     )
 
     op.create_table(
-        "company_robot",
-        Column(
-            "created_at",
-            DateTime(),
-            nullable=False,
-            default=datetime.now,
-            comment="创建时间",
-        ),
-        Column(
-            "updated_at",
-            DateTime(),
-            nullable=False,
-            default=datetime.now,
-            onupdate=datetime.now,
-            comment="更新时间",
-        ),
-        Column("deleted", Boolean(), nullable=False, default=False, comment="是否删除"),
-        Column(
-            "id",
-            Integer(),
-            nullable=False,
-            autoincrement=True,
-            primary_key=True,
-            comment="公司机器人配置ID",
-        ),
-        Column("company_id", Integer, nullable=False, comment="公司ID"),
-        Column("name", String(128), nullable=False, default=None, comment="机器人名称"),
-        Column("robot_url", String(255), nullable=True, default=None, comment="机器人地址"),
-        Column(
-            "robot_version", String(128), nullable=True, default=None, comment="机器人版本"
-        ),
-        Column("robot_key", String(128), default=None, comment="机器人对接key"),
-
-        Column("status", Integer, nullable=False, default=0, comment="状态"),
-    )
-
-    op.create_table(
         "user",
         Column(
             "created_at",
@@ -370,8 +333,75 @@ def upgrade():
         Column("company_id", Integer, nullable=False, comment="公司ID"),
         Column("name", String(32), nullable=False, comment="角色名称"),
         Column("description", String(500), comment="角色描述"),
-        Column("permission", JSON, nullable=False, default=[], comment="角色菜单权限"),
         Column("is_admin", Boolean(), nullable=False, default=False, comment="是否管理员"),
+    )
+
+    op.create_table(
+        "role_permission",
+        Column(
+            "created_at",
+            DateTime(),
+            nullable=False,
+            default=datetime.now,
+            comment="创建时间",
+        ),
+        Column(
+            "updated_at",
+            DateTime(),
+            nullable=False,
+            default=datetime.now,
+            onupdate=datetime.now,
+            comment="更新时间",
+        ),
+        Column("deleted", Boolean(), nullable=False, default=False, comment="是否删除"),
+        Column(
+            "id",
+            Integer(),
+            nullable=False,
+            autoincrement=True,
+            primary_key=True,
+            comment="角色权限ID",
+        ),
+        Column("role_id", Integer, nullable=False, comment="角色ID"),
+        Column("company_id", Integer, nullable=False, comment="公司ID"),
+        Column("app_id", Integer, nullable=False, comment="应用ID"),
+        Column("permission", JSON, nullable=False, default=[], comment="角色菜单权限")
+    )
+
+    op.create_table(
+        "company_app_robot",
+        Column(
+            "created_at",
+            DateTime(),
+            nullable=False,
+            default=datetime.now,
+            comment="创建时间",
+        ),
+        Column(
+            "updated_at",
+            DateTime(),
+            nullable=False,
+            default=datetime.now,
+            onupdate=datetime.now,
+            comment="更新时间",
+        ),
+        Column("deleted", Boolean(), nullable=False, default=False, comment="是否删除"),
+        Column(
+            "id",
+            Integer(),
+            nullable=False,
+            autoincrement=True,
+            primary_key=True,
+            comment="公司机器人配置ID",
+        ),
+        Column("company_id", Integer, nullable=False, comment="公司ID"),
+        Column("app_id", Integer, nullable=False, comment="应用ID"),
+        Column("name", String(128), nullable=False, default=None, comment="机器人名称"),
+        Column("robot_url", String(255), nullable=True, default=None, comment="机器人地址"),
+        Column(
+            "robot_version", String(128), nullable=True, default=None, comment="机器人版本"
+        ),
+        Column("robot_key", String(128), default=None, comment="机器人对接key")
     )
 
 
@@ -386,8 +416,10 @@ def downgrade():
 
     op.drop_table("company_app")
     op.drop_table("app_permission")
-    op.drop_table("company_robot")
 
     op.drop_table("user")
     op.drop_table("user_role")
     op.drop_table("role")
+    op.drop_table("role_permission")
+
+    op.drop_table("company_app_robot")

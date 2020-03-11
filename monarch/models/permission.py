@@ -39,7 +39,7 @@ class AppPermission(Base, TimestampMixin):
                 if 'children' not in parent:
                     parent['children'] = []
                 parent['children'].append(node)
-        return forest
+        return forest[0] if forest else {}
 
     @classmethod
     def gets_by_app_id(cls, app_id, deleted=False):

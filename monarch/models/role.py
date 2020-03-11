@@ -16,7 +16,6 @@ class Role(Base, TimestampMixin):
     company_id = Column(Integer, nullable=False, comment="公司ID")
     name = Column(String(32), nullable=False, comment="角色名称")
     description = Column(String(500), comment="角色描述")
-    permission = Column(JSON, nullable=False, default=[], comment="角色菜单权限")
     is_admin = Column(Boolean(), nullable=False, default=False, comment="是否管理员")
 
     users = relationship(
@@ -27,19 +26,32 @@ class Role(Base, TimestampMixin):
     )
 
     @classmethod
-    def get_by_id_and_company(cls, id, company_id):
-        return cls.query.filter_by(id=id, company_id=company_id).first()
+    def get_admin_role_by_company_id(cls, company_id, is_admin=True, deleted=False):
+        return cls.query.filter(
+            cls.company_id == company_id,
+            cls.is_admin == is_admin,
+            cls.deleted == deleted
+        ).first()
+
+
+class RolePermission(Base, TimestampMixin):
+    """角色权限表"""
+    __tablename__ = "role_permission"
+
+    id = Column(
+        Integer(), nullable=False, autoincrement=True, primary_key=True, comment="角色权限ID",
+    )
+
+    role_id = Column(Integer, nullable=False, comment="角色ID")
+    company_id = Column(Integer, nullable=False, comment="公司ID")
+    app_id = Column(Integer, nullable=False, comment="应用ID")
+    permission = Column(JSON, nullable=False, default=[], comment="角色菜单权限")
 
     @classmethod
-    def get_by_name_and_company(cls, name, company_id, exclude_id=None):
-        query = cls.query.filter_by(name=name, company_id=company_id)
-        if exclude_id:
-            query = query.filter(cls.id != exclude_id)
-        return query.first()
-
-    @classmethod
-    def get_roles_by_ids(cls, role_ids):
-        roles = []
-        if role_ids:
-            roles = cls.query.filter(cls.id.in_(role_ids)).all()
-        return roles
+    def get_by_role_company_app_id(cls, role_id, company_id, app_id, deleted=False):
+        return cls.query.filter(
+            cls.role_id == role_id,
+            cls.app_id == app_id,
+            cls.company_id == company_id,
+            cls.deleted == deleted
+        ).first()

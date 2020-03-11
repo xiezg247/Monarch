@@ -5,8 +5,8 @@ from flask_restplus._http import HTTPStatus
 from monarch.service.admin.company import (
     get_a_company,
     get_companies,
-    create_company
-)
+    create_company,
+    edit_company, reset_password_company, get_a_company_permission, edit_a_company_permission)
 
 from monarch.forms.admin.company import (
     EditCompanySchema,
@@ -64,7 +64,7 @@ class Company(Resource):
     @check_admin_login
     def put(self, company_id):
         """更新公司信息"""
-        return
+        return edit_company(company_id, g.data)
 
 
 @ns.route("/<company_id>/reset_password")
@@ -77,25 +77,25 @@ class CompanyResetPassword(Resource):
     @check_admin_login
     def put(self, company_id):
         """重制公司管理员密码"""
-        return
+        return reset_password_company(company_id, g.data)
 
 
-@ns.route("/<company_id>/menu")
+@ns.route("/<company_id>/permission/<app_id>")
 @ns.param("company_id", "公司ID")
 class CompanyMenu(Resource):
-    @ns.doc("获取公司菜单信息")
+    @ns.doc("获取公司权限信息")
     @ns.response(code=HTTPStatus.OK.value, description="成功")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
     @check_admin_login
-    def get(self, company_id):
-        """获取用户"""
-        return
+    def get(self, company_id, app_id):
+        """获取公司权限信息"""
+        return get_a_company_permission(company_id, app_id)
 
     @ns.response(code=HTTPStatus.OK.value, description="成功")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
-    @ns.doc("更新公司菜单信息")
+    @ns.doc("更新公司权限信息")
     @expect_schema(ns, EditCompanyMenuSchema(), location="json")
     @check_admin_login
-    def put(self, company_id):
-        """更新公司信息"""
-        return
+    def put(self, company_id, app_id):
+        """更新公司权限信息"""
+        return edit_a_company_permission(company_id, app_id, g.data)
