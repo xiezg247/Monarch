@@ -11,9 +11,7 @@ def init_permission(data):
     if not o_auth_app:
         return Bizs.bad_query(msg="client_id error")
 
-    app_menus = AppPermission.gets_by_app_id(o_auth_app.id)
-    for app_menu in app_menus:
-        db.session.add(app_menu.update(_hard=True, _commit=False))
+    AppPermission.hard_delete_by_app_id(o_auth_app.id)
 
     for permission in permissions:
         db.session.add(AppPermission.create(

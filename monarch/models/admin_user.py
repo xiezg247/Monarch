@@ -3,6 +3,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from monarch.models.base import Base, TimestampMixin
 from sqlalchemy import Column, String
 
+from monarch.utils.model import escape_like
+
 
 class AdminUser(Base, TimestampMixin):
     """管理员表"""
@@ -45,3 +47,32 @@ class AdminUser(Base, TimestampMixin):
         if not self._password:
             return False
         return check_password_hash(self._password, raw)
+
+    @classmethod
+    def get_by_company_id(cls, company_id, deleted=False):
+        return cls.query.join(
+            CompanyAdminUser,
+            CompanyAdminUser.admin_user_id == cls.id
+        ).filter(
+            CompanyAdminUser.company_id == company_id,
+            cls.deleted == deleted
+        ).first()
+
+    @classmethod
+    def get_by_account(cls, account, deleted=False):
+        return cls.query.filter(
+            cls.account == account,
+            cls.deleted == deleted
+        ).first()
+
+    @classmethod
+    def paginate_admin_user(cls, query_field, keyword):
+        q = []
+        if keyword:
+            if query_field == AdminUser.Q_TYPE_ACCOUNT:
+                q.append(cls.account.like("%" + escape_like(keyword) + "%"))
+
+        return cls.query.filter(*q).order_by(cls.created_at.desc())
+
+
+from monarch.models.company import CompanyAdminUser

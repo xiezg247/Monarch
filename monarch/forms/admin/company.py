@@ -5,21 +5,6 @@ from monarch.forms import SearchSchema, PaginationSchema
 from monarch.utils.date import datetime_to_timestamp, timestamp_to_format_time
 
 
-class CompanySchema(Schema):
-    name = fields.Str(required=True, allow_none=False)
-    email = fields.Str(required=True, allow_none=False)
-    password = fields.Str(required=True, allow_none=False)
-    status = fields.Int(required=True, allow_none=False)
-    admin_user_id = fields.Str(required=True, allow_none=False)
-    expired_at = fields.Int(required=True, allow_none=False)
-    remark = fields.Str()
-
-    @post_load()
-    def validate_expired_at(self, obj):
-        obj["expired_at"] = timestamp_to_format_time(obj.get("expired_at"))
-        return obj
-
-
 class RobotSchema(Schema):
     status = fields.Integer(required=True, allow_none=False)
     robot_url = fields.Str(required=True, allow_none=False)
@@ -36,9 +21,18 @@ class RobotSchema(Schema):
 
 
 class CreateCompanySchema(Schema):
-    company = fields.Nested(CompanySchema, required=True, allow_none=False)
-    permission = fields.List(fields.Int(), required=True, allow_none=False)
-    robot = fields.Nested(RobotSchema, required=True, allow_none=False)
+    name = fields.Str(required=True, allow_none=False)
+    email = fields.Str(required=True, allow_none=False)
+    password = fields.Str(required=True, allow_none=False)
+    status = fields.Int(required=True, allow_none=False)
+    admin_user_id = fields.Str(required=True, allow_none=False)
+    expired_at = fields.Int(required=True, allow_none=False)
+    remark = fields.Str()
+
+    @post_load()
+    def validate_expired_at(self, obj):
+        obj["expired_at"] = timestamp_to_format_time(obj.get("expired_at"))
+        return obj
 
 
 class EditCompanySchema(Schema):

@@ -1,3 +1,4 @@
+from monarch.corelibs.store import db
 from monarch.models.base import Base, TimestampMixin
 from sqlalchemy import Column, String, Integer
 
@@ -20,24 +21,34 @@ class AppPermission(Base, TimestampMixin):
     route_name = Column(String(128), nullable=False, default="/", comment="路由")
 
     @staticmethod
-    def menu_list_to_tree(menu_list):
-        tree = {0: {"id": 0, "parent_id": 0, "name": "总后台", "children": []}}
+    def permission_list_to_tree(permission_list):
+        nodes = {}
+        for i in permission_list:
+            id, obj = (i['permission_id'], i)
+            nodes[id] = obj
 
-        for menu in menu_list:
-            tree.setdefault(menu["parent_id"], {"children": []})
-            tree.setdefault(menu["id"], {"children": []})
-            tree[menu["id"]].update(menu)
-            tree[menu["parent_id"]]["children"].append(tree[menu["id"]])
+        forest = []
+        for i in permission_list:
+            id, parent_id, obj = (i['permission_id'], i["parent_id"], i)
+            node = nodes[id]
 
-        return tree[0]
-
-    @classmethod
-    def get_menus_by_ids(cls, menu_ids, deleted=False):
-        menus = []
-        if menu_ids:
-            menus = cls.query.filter(cls.id.in_(menu_ids), cls.deleted == deleted).all()
-        return menus
+            if parent_id == "":
+                forest.append(node)
+            else:
+                parent = nodes[parent_id]
+                if 'children' not in parent:
+                    parent['children'] = []
+                parent['children'].append(node)
+        return forest
 
     @classmethod
     def gets_by_app_id(cls, app_id, deleted=False):
         return cls.query.filter(cls.app_id == app_id, cls.deleted == deleted).all()
+
+    @classmethod
+    def hard_delete_by_app_id(cls, app_id, deleted=False):
+        db.session.query(cls).filter(
+            cls.app_id == app_id,
+            cls.deleted == deleted
+        ).delete(synchronize_session=False)
+        db.session.commit()

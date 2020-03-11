@@ -1,7 +1,6 @@
 import shortuuid
 from datetime import datetime
 
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy import (Column, Integer, String, DateTime, UniqueConstraint)
 
 from monarch.corelibs.cache_decorator import cache
@@ -13,7 +12,6 @@ from monarch.exc.consts import (
     CACHE_COMPANY,
 )
 from monarch.utils.api import parse_pagination
-from monarch.corelibs.store import db
 from monarch.corelibs.mcredis import mc
 
 
@@ -64,61 +62,6 @@ class Company(Base, TimestampMixin):
     def email(self):
         user = User.get_by_company_id(self.id, is_admin=True)
         return user.account if user else ""
-
-    @classmethod
-    def create_company_and_init_settings(cls, company_data, permission_data):
-        company = cls.create(
-            code=shortuuid.uuid(),
-            name=company_data.get("name"),
-            expired_at=company_data.get("expired_at"),
-            remark=company_data.get("remark"),
-        )
-
-        # 公司对应的智言运营
-        db.session.add(CompanyAdminUser.create(
-            company_id=company.id,
-            admin_user_id=company_data.get("admin_user_id"),
-            _commit=False
-        ))
-
-        # 公司管理员/菜单权限
-        role = cls.create(
-            company_id=company.id,
-            name="超级管理员",
-            description="超级管理员",
-            permission=permission_data,
-            is_admin=True
-        )
-
-        # 企业账号
-        user_id = shortuuid.uuid()
-        db.session.add(User.create(
-            id=user_id,
-            company_id=company.id,
-            account=company_data.get("email"),
-            password=company_data.get("password"),
-            username="admin",
-            nickname="admin",
-            enabled=True,
-            _commit=False
-        ))
-
-        # 公司管理员
-        db.session.add(UserRole.create(
-            user_id=user_id,
-            role_id=role.id,
-            _commit=False
-        ))
-
-        # 统一提交 错误回滚 回滚后需要删除已创建的公司信息/角色信息
-        try:
-            db.session.commit()
-        except IntegrityError:
-            db.session.rollback()
-            company.delete(_hard=True)
-            role.delete(_hard=True)
-            raise
-        return company
 
     @classmethod
     @cache(CACHE_COMPANY_ALL, CACHE_WEEK)
@@ -205,4 +148,4 @@ class CompanyApp(Base, TimestampMixin):
 
 
 # 放在最后避免循环引入问题
-from monarch.models.user import User, UserRole
+from monarch.models.user import User

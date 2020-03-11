@@ -1,7 +1,7 @@
 from marshmallow import fields, Schema
 
 
-class MenuSchema(Schema):
+class PermissionSchema(Schema):
     name = fields.Str()
-    id = fields.Int()
-    parent_id = fields.Int()
+    permission_id = fields.Str()
+    parent_id = fields.Str()
