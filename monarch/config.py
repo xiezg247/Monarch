@@ -1,5 +1,3 @@
-import redis
-
 DEBUG = (False,)
 ENABLE_DOC = "/"
 SECRET_KEY = "U9b6o6c-uzEn3s1dSJxFm7tCY199cUTQ-7nFEbNGsyF4l6c1pX3oMbqImv20fRC_QOH3LigfeNGKyd0-Ua1jRQ=="
@@ -20,14 +18,6 @@ REDIS_MAX_CONNECTIONS = 20
 
 # Sentry DSN 配置
 SENTRY_DSN = ""
-
-# Session Server 配置
-SESSION_TYPE = "redis"
-SESSION_PERMANENT = True
-SESSION_KEY = "session_key"
-SESSION_LIFETIME = 60 * 60 * 3
-SESSION_COOKIE_DOMAIN = ".test.com"
-SESSION_REDIS = redis.StrictRedis.from_url(REDIS_URL, max_connections=REDIS_MAX_CONNECTIONS)
 
 # Celery 配置
 CELERY_FORCE_ROOT = True
