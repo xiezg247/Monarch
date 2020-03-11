@@ -238,7 +238,7 @@ def upgrade():
         Column("name", String(32), nullable=False, comment="权限名称"),
         Column("parent_id", String(32), nullable=False, default="", comment="父级权限ID"),
         Column("permission_id", String(32), nullable=False, default="", comment="权限ID"),
-        Column("remark", String(128), nullable=False, comment="备注"),
+        Column("remark", String(128), nullable=True, default=None, comment="备注"),
         Column("route_name", String(128), nullable=False, default="/", comment="路由")
     )
 

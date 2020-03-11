@@ -17,7 +17,7 @@ class AppPermission(Base, TimestampMixin):
     name = Column(String(32), nullable=False, comment="权限名称")
     parent_id = Column(String(32), nullable=False, default="", comment="上报父级权限ID")
     permission_id = Column(String(32), nullable=False, default="", comment="上报权限ID")
-    remark = Column(String(128), nullable=False, comment="备注")
+    remark = Column(String(128), nullable=True, default=None, comment="备注")
     route_name = Column(String(128), nullable=False, default="/", comment="路由")
 
     @staticmethod
