@@ -141,7 +141,7 @@ def upgrade():
         Column("name", String(128), nullable=True, comment="公司名称"),
         Column("expired_at", DateTime(), default=datetime.now, comment="到期日期"),
         Column("remark", String(255), nullable=True, comment="企业描述"),
-        Column("status", Integer, nullable=False, default=0, comment="开启状态"),
+        Column("logo", String(255), nullable=True, default=None, comment="企业logo")
     )
 
     op.create_table(

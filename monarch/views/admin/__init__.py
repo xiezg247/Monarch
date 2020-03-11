@@ -24,6 +24,7 @@ def register_admin_conf_center(app):
         version="1.0",
         description="New API",
         authorizations=authorizations,
+        security='apikey',
         doc=config.ENABLE_DOC,
     )
     api.add_namespace(company_ns, path="/company")
