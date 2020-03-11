@@ -19,7 +19,7 @@ def create_oauth_app(data):
     OAuthApp.create(
         client_id=gen_random_key(),
         client_secret=gen_random_key(),
-        status=OAuthApp.APPROVED,
+        status=OAuthApp.STATUS_ON,
         name=data.get("name"),
         description=data.get("description"),
         homepage=data.get("homepage"),

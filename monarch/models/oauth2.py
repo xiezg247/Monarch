@@ -18,8 +18,8 @@ class OAuthApp(Base, TimestampMixin):
     )
 
     # status
-    UNAPPROVED = 1  # 未审核
-    APPROVED = 2  # 已审核
+    STATUS_ON = 1  # 启用
+    STATUS_OFF = 2  # 禁用
 
     id = Column(
         Integer(), nullable=False, autoincrement=True, primary_key=True, comment="应用ID",
