@@ -1,11 +1,9 @@
-DEBUG = (False,)
+DEBUG = False
 ENABLE_DOC = "/"
 SECRET_KEY = "U9b6o6c-uzEn3s1dSJxFm7tCY199cUTQ-7nFEbNGsyF4l6c1pX3oMbqImv20fRC_QOH3LigfeNGKyd0-Ua1jRQ=="
 
 # SQLALCHEMY 配置
-SQLALCHEMY_DATABASE_URI = (
-    "mysql+pymysql://root:root@127.0.0.1:3306/monarch?charset=utf8mb4"
-)
+SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:root@127.0.0.1:3306/monarch?charset=utf8mb4"
 SQLALCHEMY_POOL_SIZE = 100
 SQLALCHEMY_MAX_OVERFLOW = 500
 SQLALCHEMY_POOL_TIMEOUT = 10
