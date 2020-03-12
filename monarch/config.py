@@ -31,6 +31,9 @@ CELERYBEAT_SCHEDULE = {}
 # SMS请求域名
 SMS_BASE_URL = ""
 
+# 统一登录中心
+SSO_URL = "http://sso-dev.zhiyantek.com"
+
 try:
     from local_settings import *  # noqa
 except Exception as err:  # noqa
