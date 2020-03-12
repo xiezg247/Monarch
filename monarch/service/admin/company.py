@@ -83,7 +83,7 @@ def get_a_company(company_id):
         )
     company_data = CompanyDetailSchema().dump(company).data
 
-    user = User.get_by_company_id(company_id, is_admin=True)
+    user = User.get_admin_role_by_company_id(company_id, is_admin=True)
     admin_user = AdminUser.get_by_company_id(company_id)
     company_data["admin_user_id"] = admin_user.id if admin_user else ""
     company_data["admin_user_account"] = admin_user.account if admin_user else ""
