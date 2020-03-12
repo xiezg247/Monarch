@@ -31,6 +31,7 @@ class OAuthApp(Base, TimestampMixin):
     description = Column(String(128), nullable=False, default=None, comment="描述")
     homepage = Column(String(128), nullable=False, default=None, comment="主页")
     redirect_url = Column(String(128), nullable=False, comment="重定向的URL")
+    init_url = Column(String(128), nullable=True, default="", comment="初始化URL")
     status = Column(Integer(), nullable=False, default=0, comment="App的审核状态，默认审核中")
     # 这一期暂不做限制
     scopes = Column(Integer(), nullable=False, default=0, comment="申请的权限的位图，默认无权限")

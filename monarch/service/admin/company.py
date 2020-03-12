@@ -13,6 +13,7 @@ from monarch.models.user import User, UserRole
 from monarch.models.admin_user import AdminUser
 from monarch.utils.api import parse_pagination, Bizs
 from monarch.utils.date import datetime_to_timestamp
+from monarch.external.push_app import AppPushService
 
 
 def get_companies(data):
@@ -181,6 +182,7 @@ def get_a_company_permission(company_id, app_id):
     return Bizs.success(data=dict(
         permission=permission_tree,
         status=status,
+        init_status=company_app.init_status if company_app else 0,
         robot_url=robot_url,
         expired_at=datetime_to_timestamp(company_app.expired_at) if company_app else 0,
         is_bind=True if company_app else False
@@ -203,19 +205,38 @@ def edit_a_company_permission(company_id, app_id, data):
     if not role:
         return Bizs.success(code=codes.BIZ_CODE_NOT_EXISTS, http_code=codes.HTTP_OK, msg="超级管理员不存在")
 
+    o_auth_app = OAuthApp.get(app_id)
+    if not o_auth_app:
+        return Bizs.success(code=codes.BIZ_CODE_NOT_EXISTS, http_code=codes.HTTP_OK, msg="应用不存在")
+
     company_app = CompanyApp.get_by_company_app_id(company_id, app_id)
+    init_status = CompanyApp.STATUS_OFF
     if not company_app:
-        CompanyApp.create(
+        company_app = CompanyApp.create(
             app_id=app_id,
             company_id=company_id,
             status=status,
-            expired_at=expired_at
+            expired_at=expired_at,
+            init_status=init_status
         )
-    else:
-        company_app.update(
-            status=status,
-            expired_at=expired_at
-        )
+
+    # 推送公司信息到子应用
+    if not o_auth_app.init_url:
+        if company_app.init_status != CompanyApp.STATUS_ON:
+            app_push_service = AppPushService(o_auth_app.init_url)
+            data = {
+                "company_code": company.code,
+                "company_name": company.name
+            }
+            code, resp = app_push_service.send_company_data(data)
+            if code == codes.BIZ_CODE_OK:
+                init_status = CompanyApp.STATUS_ON
+
+    company_app.update(
+        init_status=init_status,
+        status=status,
+        expired_at=expired_at
+    )
 
     role_permission = RolePermission.get_by_role_company_app_id(role.id, company_id, app_id)
     if not role_permission:

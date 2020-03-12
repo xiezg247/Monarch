@@ -25,6 +25,7 @@ def create_oauth_app(data):
         homepage=data.get("homepage"),
         redirect_url=data.get("redirect_url"),
         white_list=data.get("white_list"),
+        init_url=data.get("init_url")
     )
     return Bizs.success()
 
@@ -48,7 +49,8 @@ def update_oauth_app(oauth_app_id, data):
         homepage=data.get("homepage"),
         redirect_url=data.get("redirect_url"),
         white_list=data.get("white_list"),
-        name=data.get("name")
+        name=data.get("name"),
+        init_url=data.get("init_url")
     )
     return Bizs.success()
 
