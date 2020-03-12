@@ -51,7 +51,6 @@ class CompanyListSchema(Schema):
     email = fields.Str()
     remark = fields.Str()
     expired_at = fields.Method('get_expired_at')
-    robot_status = fields.Method('get_robot_status')
 
     def get_expired_at(self, obj):
         return datetime_to_timestamp(obj.expired_at)

@@ -97,6 +97,12 @@ class User(Base, TimestampMixin):
             cls.deleted == deleted
         ).first()
 
+    @classmethod
+    def get_by_account(cls, account, deleted=False, enabled=True):
+        return cls.query.filter_by(
+            account=account, deleted=deleted, enabled=enabled
+        ).first()
+
 
 class UserRole(Base, TimestampMixin):
     """客服角色表"""

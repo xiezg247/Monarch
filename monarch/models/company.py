@@ -59,7 +59,7 @@ class Company(Base, TimestampMixin):
 
     @property
     def email(self):
-        user = User.get_by_company_id(self.id, is_admin=True)
+        user = User.get_admin_role_by_company_id(self.id, is_admin=True)
         return user.account if user else ""
 
     @classmethod
