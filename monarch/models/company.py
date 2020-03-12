@@ -3,12 +3,9 @@ from datetime import datetime
 
 from sqlalchemy import (Column, Integer, String, DateTime)
 
-from monarch.corelibs.cache_decorator import cache
-from monarch.models.base import Base, TimestampMixin, model_cache
+from monarch.models.base import Base, TimestampMixin
 from monarch.utils.model import escape_like
 from monarch.exc.consts import (
-    CACHE_WEEK,
-    CACHE_COMPANY_ALL,
     CACHE_COMPANY,
 )
 from monarch.corelibs.mcredis import mc
@@ -37,15 +34,6 @@ class Company(Base, TimestampMixin):
     logo = Column(String(255), nullable=True, default=None, comment="企业logo")
 
     @classmethod
-    @model_cache(CACHE_COMPANY, CACHE_WEEK)
-    def get(cls, id, exclude_deleted=True):
-        return super().get(id=id, exclude_deleted=exclude_deleted)
-
-    @classmethod
-    def get_company_by_code(cls, code):
-        return cls.query.filter_by(code=code).first()
-
-    @classmethod
     def paginate_company(cls, query_field, keyword):
         q = []
         if keyword:
@@ -62,14 +50,8 @@ class Company(Base, TimestampMixin):
         user = User.get_admin_role_by_company_id(self.id, is_admin=True)
         return user.account if user else ""
 
-    @classmethod
-    @cache(CACHE_COMPANY_ALL, CACHE_WEEK)
-    def all(cls, exclude_deleted=True):
-        return super().all(exclude_deleted=exclude_deleted)
-
     def _clean_cache(self):
         mc.delete(CACHE_COMPANY.format(id=self.id))
-        mc.delete(CACHE_COMPANY_ALL)
 
 
 class CompanyAdminUser(Base, TimestampMixin):
@@ -111,7 +93,7 @@ class CompanyApp(Base, TimestampMixin):
     expired_at = Column(DateTime(), default=datetime.now, comment="到期日期")
 
     @classmethod
-    def get_by_company_id(cls, company_id, app_id, deleted=False):
+    def get_by_company_app_id(cls, company_id, app_id, deleted=False):
         return cls.query.filter(
             cls.company_id == company_id,
             cls.app_id == app_id,

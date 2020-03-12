@@ -75,16 +75,6 @@ class User(Base, TimestampMixin):
         self.save()
         return True
 
-    @property
-    def roles(self):
-        return Role.query.join(
-            UserRole, UserRole.role_id == Role.id
-        ).join(
-            User, User.id == UserRole.user_id
-        ).filter(
-            User.id == self.id
-        ).all()
-
     @classmethod
     def get_admin_role_by_company_id(cls, company_id, is_admin=True, deleted=False):
         return cls.query.join(

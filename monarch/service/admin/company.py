@@ -138,7 +138,7 @@ def get_a_company_permission(company_id, app_id):
     role_company_app_permission = []
     status = CompanyApp.STATUS_OFF
 
-    company_app = CompanyApp.get_by_company_id(company_id, app_id)
+    company_app = CompanyApp.get_by_company_app_id(company_id, app_id)
     if company_app:
         status = company_app.status
         role = Role.get_admin_role_by_company_id(company_id, is_admin=True)
@@ -185,7 +185,7 @@ def edit_a_company_permission(company_id, app_id, data):
     if not role:
         return biz_success(code=codes.BIZ_CODE_NOT_EXISTS, http_code=codes.HTTP_OK, msg="超级管理员不存在")
 
-    company_app = CompanyApp.get_by_company_id(company_id, app_id)
+    company_app = CompanyApp.get_by_company_app_id(company_id, app_id)
     if not company_app:
         CompanyApp.create(
             app_id=app_id,

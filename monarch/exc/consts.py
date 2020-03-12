@@ -19,7 +19,6 @@ REQUESTS_TIMEOUT = 15
 
 # company
 CACHE_COMPANY = "monarch:company:id:{id}"
-CACHE_COMPANY_ALL = "monarch:company:all"
 
 # User #
 CACHE_USER_BY_ID = "monarch:user:id:{_id}"
