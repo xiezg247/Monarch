@@ -17,7 +17,7 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column("company_app", sa.Column("init_status", sa.Boolean, nullable=False, default=False, comment="初始化状态：1 成功 2 失败"))
+    op.add_column("company_app", sa.Column("init_status", sa.Integer, nullable=False, comment="初始化状态：1 成功 2 失败"))
 
 
 def downgrade():

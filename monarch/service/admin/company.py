@@ -221,7 +221,7 @@ def edit_a_company_permission(company_id, app_id, data):
         )
 
     # 推送公司信息到子应用
-    if not o_auth_app.init_url:
+    if o_auth_app.init_url is not None:
         if company_app.init_status != CompanyApp.STATUS_ON:
             app_push_service = AppPushService(o_auth_app.init_url)
             data = {

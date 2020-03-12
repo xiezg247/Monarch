@@ -1,7 +1,7 @@
 import shortuuid
 from datetime import datetime
 
-from sqlalchemy import (Column, Integer, String, DateTime, Boolean)
+from sqlalchemy import (Column, Integer, String, DateTime)
 
 from monarch.models.base import Base, TimestampMixin
 from monarch.utils.model import escape_like
@@ -95,7 +95,7 @@ class CompanyApp(Base, TimestampMixin):
     app_id = Column(Integer, nullable=False, default=0, comment="应用ID")
     status = Column(Integer, nullable=False, comment="启用状态")
     expired_at = Column(DateTime(), default=datetime.now, comment="到期日期")
-    init_status = Column(Boolean, nullable=False, default=False, comment="初始化状态：1 成功 2 失败")
+    init_status = Column(Integer, nullable=False, comment="初始化状态：1 成功 2 失败")
 
     @classmethod
     def get_by_company_app_id(cls, company_id, app_id, deleted=False):
