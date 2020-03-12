@@ -165,7 +165,8 @@ def get_a_company_permission(company_id, app_id):
         permission=permission_tree,
         status=status,
         robot_url=robot_url,
-        expired_at=datetime_to_timestamp(company_app.expired_at) if company_app else 0
+        expired_at=datetime_to_timestamp(company_app.expired_at) if company_app else 0,
+        is_bind=True if company_app else False
     ))
 
 
