@@ -165,7 +165,7 @@ def get_a_company_permission(company_id, app_id):
         permission=permission_tree,
         status=status,
         robot_url=robot_url,
-        expired_at=datetime_to_timestamp(company_app.expired_at)
+        expired_at=datetime_to_timestamp(company_app.expired_at) if company_app else 0
     ))
 
 
@@ -189,7 +189,12 @@ def edit_a_company_permission(company_id, app_id, data):
     if not company_app:
         CompanyApp.create(
             app_id=app_id,
-            company_app=company_id,
+            company_id=company_id,
+            status=status,
+            expired_at=expired_at
+        )
+    else:
+        company_app.update(
             status=status,
             expired_at=expired_at
         )
@@ -200,6 +205,10 @@ def edit_a_company_permission(company_id, app_id, data):
             role_id=role.id,
             app_id=app_id,
             company_id=company_id,
+            permission=permission
+        )
+    else:
+        role_permission.update(
             permission=permission
         )
 

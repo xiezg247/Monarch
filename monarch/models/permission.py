@@ -32,7 +32,7 @@ class AppPermission(Base, TimestampMixin):
             id, parent_id, obj = (i['permission_id'], i["parent_id"], i)
             node = nodes[id]
 
-            if parent_id == "":
+            if parent_id in ["", "0"]:
                 forest.append(node)
             else:
                 parent = nodes[parent_id]
