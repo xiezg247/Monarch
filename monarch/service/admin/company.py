@@ -59,6 +59,7 @@ def create_company(data):
         company_id=company.id,
         app_id=default_app.id,
         status=CompanyApp.STATUS_ON,
+        init_status=CompanyApp.STATUS_OFF,
         expired_at=datetime(2120, 1, 1)
     )
 
