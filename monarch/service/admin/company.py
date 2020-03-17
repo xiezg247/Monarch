@@ -227,7 +227,8 @@ def edit_a_company_permission(company_id, app_id, data):
             app_push_service = AppPushService(o_auth_app.init_url)
             data = {
                 "company_code": company.code,
-                "company_name": company.name
+                "company_name": company.name,
+                "robot_url": robot_url
             }
             code, resp = app_push_service.send_company_data(data)
             if code == codes.BIZ_CODE_OK:
