@@ -210,35 +210,34 @@ def edit_a_company_permission(company_id, app_id, data):
     if not o_auth_app:
         return Bizs.success(code=codes.BIZ_CODE_NOT_EXISTS, http_code=codes.HTTP_OK, msg="应用不存在")
 
-    company_app = CompanyApp.get_by_company_app_id(company_id, app_id)
     init_status = CompanyApp.STATUS_OFF
+    # 推送公司信息到子应用
+    if o_auth_app.init_url is not None:
+        app_push_service = AppPushService(o_auth_app.init_url)
+        data = {
+            "company_code": company.code,
+            "company_name": company.name,
+            "robot_url": robot_url
+        }
+        code, resp = app_push_service.send_company_data(data)
+        if code == codes.BIZ_CODE_OK:
+            init_status = CompanyApp.STATUS_ON
+
+    company_app = CompanyApp.get_by_company_app_id(company_id, app_id)
     if not company_app:
-        company_app = CompanyApp.create(
+        CompanyApp.create(
             app_id=app_id,
             company_id=company_id,
             status=status,
             expired_at=expired_at,
             init_status=init_status
         )
-
-    # 推送公司信息到子应用
-    if o_auth_app.init_url is not None:
-        if company_app.init_status != CompanyApp.STATUS_ON:
-            app_push_service = AppPushService(o_auth_app.init_url)
-            data = {
-                "company_code": company.code,
-                "company_name": company.name,
-                "robot_url": robot_url
-            }
-            code, resp = app_push_service.send_company_data(data)
-            if code == codes.BIZ_CODE_OK:
-                init_status = CompanyApp.STATUS_ON
-
-    company_app.update(
-        init_status=init_status,
-        status=status,
-        expired_at=expired_at
-    )
+    else:
+        company_app.update(
+            init_status=init_status,
+            status=status,
+            expired_at=expired_at
+        )
 
     role_permission = RolePermission.get_by_role_company_app_id(role.id, company_id, app_id)
     if not role_permission:
