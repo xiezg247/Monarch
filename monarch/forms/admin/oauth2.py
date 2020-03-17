@@ -35,7 +35,7 @@ class CreateOauthAppSchema(Schema):
     redirect_url = fields.Str(required=True, allow_none=False, description="重定向地址")
     white_list = fields.Boolean(required=True, allow_none=False, description="是否白名单应用")
     description = fields.Str(required=True, allow_none=False, description="简介")
-    init_url = fields.Str(description="初始化地址")
+    init_url = fields.Str(required=False, description="初始化地址")
 
 
 class UpdateOauthAppSchema(Schema):
@@ -44,4 +44,4 @@ class UpdateOauthAppSchema(Schema):
     redirect_url = fields.Str(required=True, allow_none=False, description="重定向地址")
     white_list = fields.Boolean(required=True, allow_none=False, description="是否白名单应用")
     description = fields.Str(required=True, allow_none=False, description="简介")
-    init_url = fields.Str(description="初始化地址")
+    init_url = fields.Str(required=False, description="初始化地址")
