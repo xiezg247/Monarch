@@ -17,13 +17,6 @@ CACHE_MONTH = 60 * 60 * 24 * 30
 # Request Timeout
 REQUESTS_TIMEOUT = 15
 
-# company
-CACHE_COMPANY = "sso:company:id:{id}"
-
-# User #
-CACHE_USER_BY_ID = "sso:user:id:{_id}"
-CACHE_USER_BY_ACCOUNT = "sso:user:account:{account}"
-
 # AdminUser
 CACHE_ADMIN_USER_TOKEN = "sso:admin_user:token:{}"  # 管理员token缓存
 CACHE_ADMIN_USER_CAPTCHA = "sso:admin_user:captcha:{}"  # 管理员登录验证码缓存

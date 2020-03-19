@@ -5,10 +5,6 @@ from sqlalchemy import (Column, Integer, String, DateTime)
 
 from monarch.models.base import Base, TimestampMixin
 from monarch.utils.model import escape_like
-from monarch.exc.consts import (
-    CACHE_COMPANY,
-)
-from monarch.corelibs.mcredis import mc
 
 
 class Company(Base, TimestampMixin):
@@ -53,9 +49,6 @@ class Company(Base, TimestampMixin):
     @classmethod
     def get_by_code(cls, code, deleted=False):
         return cls.query.filter(cls.code == code, cls.deleted == deleted).first()
-
-    def _clean_cache(self):
-        mc.delete(CACHE_COMPANY.format(id=self.id))
 
 
 class CompanyAdminUser(Base, TimestampMixin):
