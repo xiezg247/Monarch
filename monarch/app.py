@@ -7,7 +7,6 @@ from marshmallow.exceptions import ValidationError
 from monarch.corelibs.backend import celery
 from flask import Flask, current_app, request
 from flask_restplus import Api
-from flask_session import Session
 
 from raven.contrib.flask import Sentry
 from sqlalchemy.exc import TimeoutError
@@ -21,13 +20,12 @@ from monarch.exc import codes
 
 from monarch.utils.api import http_fail
 
-from monarch.views import register_internal_app
-from monarch.views.api import register_api
+from monarch.views.admin import register_admin_conf_center
+from monarch.views.partner import register_partner_api
 
 from monarch import config
 
 api = Api()
-sess = Session()
 
 LOGGING_CONFIG = {
     "version": 1,
@@ -64,7 +62,6 @@ def create_app(name=None, _config=None):
 
     celery.init_app(app)
 
-    sess.init_app(app)
     db.init_app(app)
     mc.init_app(app)
 
@@ -74,8 +71,8 @@ def create_app(name=None, _config=None):
     setup_before_request(app)
     setup_after_request(app)
 
-    register_internal_app(app)
-    register_api(app)
+    register_admin_conf_center(app)
+    register_partner_api(app)
     setup_errorhandler(app)
 
     return app

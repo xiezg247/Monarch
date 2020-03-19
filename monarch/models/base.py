@@ -1,9 +1,11 @@
 from datetime import datetime
+from functools import wraps
 
 from sqlalchemy import Boolean, Column, DateTime
 from sqlalchemy.exc import IntegrityError
 
 from monarch.corelibs.store import db
+from monarch.corelibs.cache_decorator import cache
 
 
 class Base(db.Model):
@@ -80,3 +82,37 @@ class TimestampMixin(object):
     )
 
     deleted = Column(Boolean(), default=False, nullable=False, comment="是否删除")
+
+
+def model_cache(*args, **kwargs):
+    """注意，仅用于单model或单model列表的缓存.
+    格式如下:
+        单model: User
+        单model列表: [User<1>, User<2>]
+    原因:
+        从缓存拿出的model, 处于与db.session分离状态, 为避免relationship机制出错，需手动进行绑定
+    其他说明:
+        如直接使用monarch.corelibs.cache_decorator.cache进行缓存，则请避免使用relationship属性
+    """
+    cache_func = cache(*args, **kwargs)
+
+    def _(f):
+        func = cache_func(f)
+
+        @wraps(f)
+        def __(*a, **kw):
+            r = func(*a, **kw)
+            if not r:
+                return r
+
+            # 返回r为单model列表
+            if isinstance(r, list):
+                if r[0] not in db.session:
+                    r = [db.session.merge(item, load=False) for item in r]
+
+            # 返回r为单model
+            elif r not in db.session:
+                r = db.session.merge(r, load=False)
+            return r
+        return __
+    return _

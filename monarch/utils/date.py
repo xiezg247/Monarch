@@ -24,3 +24,7 @@ def expire_date(day=7):
     默认7天后的时间戳
     """
     return int(_time.time() * 1000) + day * 24 * 60 * 60 * 1000
+
+
+def date_to_datetime(date):
+    return datetime.combine(date, time.min)

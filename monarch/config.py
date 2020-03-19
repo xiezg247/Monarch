@@ -1,13 +1,9 @@
-import redis
-
-DEBUG = (False,)
+DEBUG = False
 ENABLE_DOC = "/"
 SECRET_KEY = "U9b6o6c-uzEn3s1dSJxFm7tCY199cUTQ-7nFEbNGsyF4l6c1pX3oMbqImv20fRC_QOH3LigfeNGKyd0-Ua1jRQ=="
 
 # SQLALCHEMY 配置
-SQLALCHEMY_DATABASE_URI = (
-    "mysql+pymysql://root:root@127.0.0.1:3306/monarch?charset=utf8mb4"
-)
+SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:root@127.0.0.1:3306/monarch?charset=utf8mb4"
 SQLALCHEMY_POOL_SIZE = 100
 SQLALCHEMY_MAX_OVERFLOW = 500
 SQLALCHEMY_POOL_TIMEOUT = 10
@@ -20,14 +16,6 @@ REDIS_MAX_CONNECTIONS = 20
 
 # Sentry DSN 配置
 SENTRY_DSN = ""
-
-# Session Server 配置
-SESSION_TYPE = "redis"
-SESSION_PERMANENT = True
-SESSION_KEY = "session_key"
-SESSION_LIFETIME = 60 * 60 * 3
-SESSION_COOKIE_DOMAIN = ".test.com"
-SESSION_REDIS = redis.StrictRedis.from_url(REDIS_URL, max_connections=REDIS_MAX_CONNECTIONS)
 
 # Celery 配置
 CELERY_FORCE_ROOT = True
@@ -42,6 +30,9 @@ CELERYBEAT_SCHEDULE = {}
 
 # SMS请求域名
 SMS_BASE_URL = ""
+
+# 统一登录中心
+SSO_URL = "http://sso-dev.zhiyantek.com"
 
 try:
     from local_settings import *  # noqa
