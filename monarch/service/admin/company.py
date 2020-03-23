@@ -112,14 +112,21 @@ def get_a_company(company_id):
 
 
 def edit_company(company_id, data):
+    expired_at = data.get("expired_at")
     company = Company.get(company_id)
     if not company:
         return Bizs.success(
             code=codes.BIZ_CODE_NOT_EXISTS, http_code=codes.HTTP_OK, msg="公司不存在"
         )
+    company_apps = CompanyApp.gets_by_company_id(company_id)
+    for company_app in company_apps:
+        if company_app.expired_at > datetime.strptime(expired_at, "%Y-%m-%d %H:%M:%S"):
+            return Bizs.success(
+                code=codes.CODE_BAD_REQUEST, http_code=codes.HTTP_BAD_REQUEST, msg="不能大于公司的过期时间"
+            )
     company.update(
         name=data.get("name"),
-        expired_at=data.get("expired_at"),
+        expired_at=expired_at,
         remark=data.get("remark")
     )
     return Bizs.success()

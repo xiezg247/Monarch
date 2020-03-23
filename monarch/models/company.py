@@ -103,6 +103,13 @@ class CompanyApp(Base, TimestampMixin):
             cls.deleted == deleted
         ).first()
 
+    @classmethod
+    def gets_by_company_id(cls, company_id, deleted=False):
+        return cls.query.filter(
+            cls.company_id == company_id,
+            cls.deleted == deleted
+        ).all()
+
 
 class CompanyAppRobot(Base, TimestampMixin):
     """公司机器人配置表"""
