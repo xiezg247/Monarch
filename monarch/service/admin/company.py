@@ -1,4 +1,5 @@
 import shortuuid
+from datetime import datetime
 
 from flask import g
 from monarch.exc import codes
@@ -199,6 +200,11 @@ def edit_a_company_permission(company_id, app_id, data):
     if not company:
         return Bizs.success(
             code=codes.BIZ_CODE_NOT_EXISTS, http_code=codes.HTTP_OK, msg="公司不存在"
+        )
+
+    if datetime.strptime(expired_at, "%Y-%m-%d %H:%M:%S") > company.expired_at:
+        return Bizs.success(
+            code=codes.CODE_BAD_REQUEST, http_code=codes.HTTP_BAD_REQUEST, msg="不能大于公司的过期时间"
         )
 
     role = Role.get_admin_role_by_company_id(company_id, is_admin=True)
