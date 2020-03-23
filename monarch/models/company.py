@@ -53,7 +53,7 @@ class Company(Base, TimestampMixin):
         return cls.query.filter(cls.code == code, cls.deleted == deleted).first()
 
     def _clean_cache(self):
-        mc.delete(CACHE_COMPANY_INFO.format(company_id=self.id))
+        mc.delete(CACHE_COMPANY_INFO.format(self.id))
 
 
 class CompanyAdminUser(Base, TimestampMixin):

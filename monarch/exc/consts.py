@@ -22,4 +22,4 @@ CACHE_ADMIN_USER_TOKEN = "sso:admin_user:token:{}"  # 管理员token缓存
 CACHE_ADMIN_USER_CAPTCHA = "sso:admin_user:captcha:{}"  # 管理员登录验证码缓存
 
 # Company
-CACHE_COMPANY_INFO = "sso:company:info:{company_id}"
+CACHE_COMPANY_INFO = "sso:company:info:{}"
