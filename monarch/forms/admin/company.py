@@ -2,6 +2,7 @@ from marshmallow import fields, Schema, post_load, ValidationError
 from marshmallow.validate import Length
 
 from monarch.forms import SearchSchema, PaginationSchema
+from monarch.forms.validator.company import PasswordValidator
 from monarch.utils.date import datetime_to_timestamp, timestamp_to_format_time
 
 
@@ -35,8 +36,8 @@ class EditCompanySchema(Schema):
 
 class CompanyResetPasswordSchema(Schema):
     admin_password = fields.Str(required=True, allow_none=False)
-    new_password = fields.Str(required=True, allow_none=False)
-    repeat_password = fields.Str(required=True, allow_none=False)
+    new_password = fields.Str(required=True, allow_none=False, validate=PasswordValidator())
+    repeat_password = fields.Str(required=True, allow_none=False, validate=PasswordValidator())
 
 
 class SearchCompanySchema(SearchSchema, PaginationSchema):
