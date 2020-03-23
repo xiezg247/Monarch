@@ -3,6 +3,8 @@ from datetime import datetime
 
 from sqlalchemy import (Column, Integer, String, DateTime)
 
+from monarch.corelibs.mcredis import mc
+from monarch.exc.consts import CACHE_COMPANY_INFO
 from monarch.models.base import Base, TimestampMixin
 from monarch.utils.model import escape_like
 
@@ -49,6 +51,9 @@ class Company(Base, TimestampMixin):
     @classmethod
     def get_by_code(cls, code, deleted=False):
         return cls.query.filter(cls.code == code, cls.deleted == deleted).first()
+
+    def _clean_cache(self):
+        mc.delete(CACHE_COMPANY_INFO.format(company_id=self.id))
 
 
 class CompanyAdminUser(Base, TimestampMixin):
