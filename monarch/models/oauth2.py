@@ -57,6 +57,10 @@ class OAuthApp(Base, TimestampMixin):
     def get_default(cls, is_default=True, deleted=False):
         return cls.query.filter(cls.is_default == is_default, cls.deleted == deleted).first()
 
+    @classmethod
+    def get_by_name(cls, name, deleted=False):
+        return cls.query.filter_by(name=name, deleted=deleted).first()
+
 
 class OAuthAuthorize(Base, TimestampMixin):
     """授权码"""

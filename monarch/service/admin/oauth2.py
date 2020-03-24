@@ -16,6 +16,10 @@ def get_oauth_app_list(data):
 
 
 def create_oauth_app(data):
+    app = OAuthApp.get_by_name(data.get('name'))
+    if app:
+        return Bizs.fail(msg='应用名已存在')
+
     OAuthApp.create(
         client_id=gen_random_key(),
         client_secret=gen_random_key(),
