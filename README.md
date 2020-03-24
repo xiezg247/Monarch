@@ -1,4 +1,5 @@
 ## 项目介绍
+运营中心
 
 ## 项目结构
 ```python
@@ -131,10 +132,10 @@ gunicorn -k gevent -t 10 -w 4 -b "0.0.0.0:8015" monarch.wsgi:application
 
 ### 启动celery worker
 ```python
-celery worker -A monarch.corelibs.backend.celery_worker --loglevel=INFO -c 4 -P gevent -Q celery
+celery worker -A manage.celery --loglevel=INFO -c 4 -P gevent -Q celery
 ```
 
 ### 启动celery beat
 ```python
-celery beat -A monarch.corelibs.backend.celery_worker --loglevel=INFO
+celery beat -A monarch.celery --loglevel=INFO
 ```

@@ -19,7 +19,9 @@ REQUESTS_TIMEOUT = 15
 
 # AdminUser
 CACHE_ADMIN_USER_TOKEN = "sso:admin_user:token:{}"  # 管理员token缓存
-CACHE_ADMIN_USER_CAPTCHA = "sso:admin_user:captcha:{}"  # 管理员登录验证码缓存
 
 # Company
 CACHE_COMPANY_INFO = "sso:company:info:{}"
+
+# Captcha
+CACHE_CAPTCHA_IMAGE_KEY = 'sso:captcha:image:{}'

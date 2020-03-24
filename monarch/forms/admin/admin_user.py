@@ -12,14 +12,8 @@ class AdminUserSchema(Schema):
     account = fields.Str()
 
 
-class CaptchaSchema(Schema):
-    t = fields.Str(required=True, allow_none=False)
-    theme = fields.Str()
-
-
 class LoginSchema(Schema):
     account = fields.Str(required=True, allow_none=False)
     password = fields.Str(required=True, allow_none=False)
-    t = fields.Str(required=True, allow_none=False)
-    code = fields.List(fields.Int(), required=True, allow_none=False)
-    force_login = fields.Boolean(required=True, allow_none=False)
+    captcha_value = fields.Str(required=True, allow_none=False)
+    captcha_id = fields.Str(required=True, allow_none=False)
