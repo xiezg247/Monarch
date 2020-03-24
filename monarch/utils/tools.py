@@ -1,13 +1,12 @@
 import uuid
 import random
-import string
 
 from PIL import ImageFilter
 from captcha.image import ImageCaptcha, random_color
 
 
 def random_text(length=4):
-    return ''.join(random.sample('{}0123456789'.format(string.ascii_letters), length))
+    return ''.join(random.sample('0123456789', length))
 
 
 def gen_id():

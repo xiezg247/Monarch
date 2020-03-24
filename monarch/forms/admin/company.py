@@ -71,7 +71,6 @@ class CompanyDetailSchema(Schema):
 class EditCompanyMenuSchema(Schema):
     permission = fields.List(fields.Str(), required=True, allow_none=False)
     status = fields.Integer(required=True, allow_none=False)
-    robot_url = fields.Str(required=False, allow_none=True)
     expired_at = fields.Int(required=True, allow_none=False)
 
     @post_load()

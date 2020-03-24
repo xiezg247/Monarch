@@ -8,7 +8,7 @@ from monarch.utils.api import Bizs
 
 
 def get_captcha():
-    text = random_text().lower()
+    text = random_text()
     image_uuid = gen_id()
     image_data = CustomImageCaptcha().generate(text)
     image_data_b64 = base64.b64encode(image_data.getvalue()).decode('utf-8')

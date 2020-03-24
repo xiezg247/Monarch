@@ -13,7 +13,6 @@ from monarch.models.user import User, UserRole
 from monarch.models.admin_user import AdminUser
 from monarch.utils.api import parse_pagination, Bizs
 from monarch.utils.date import datetime_to_timestamp
-from monarch.external.push_app import AppPushService
 
 
 def get_companies(data):
@@ -200,7 +199,6 @@ def get_a_company_permission(company_id, app_id):
 def edit_a_company_permission(company_id, app_id, data):
     status = data.get("status")
     permission = data.get("permission")
-    robot_url = data.get("robot_url")
     expired_at = data.get("expired_at")
 
     company = Company.get(company_id)
@@ -222,19 +220,6 @@ def edit_a_company_permission(company_id, app_id, data):
     if not o_auth_app:
         return Bizs.success(code=codes.BIZ_CODE_NOT_EXISTS, http_code=codes.HTTP_OK, msg="应用不存在")
 
-    init_status = CompanyApp.STATUS_OFF
-    # 推送公司信息到子应用
-    if o_auth_app.init_url is not None:
-        app_push_service = AppPushService(o_auth_app.init_url)
-        data = {
-            "company_code": company.code,
-            "company_name": company.name,
-            "robot_url": robot_url
-        }
-        code, resp = app_push_service.send_company_data(data)
-        if code == codes.BIZ_CODE_OK:
-            init_status = CompanyApp.STATUS_ON
-
     company_app = CompanyApp.get_by_company_app_id(company_id, app_id)
     if not company_app:
         CompanyApp.create(
@@ -242,11 +227,10 @@ def edit_a_company_permission(company_id, app_id, data):
             company_id=company_id,
             status=status,
             expired_at=expired_at,
-            init_status=init_status
+            init_status=CompanyApp.STATUS_INIT
         )
     else:
         company_app.update(
-            init_status=init_status,
             status=status,
             expired_at=expired_at
         )
@@ -263,16 +247,5 @@ def edit_a_company_permission(company_id, app_id, data):
         role_permission.update(
             permission=permission
         )
-
-    if robot_url:
-        company_robot = CompanyAppRobot.get_by_company_app_id(company_id, app_id)
-        if not company_robot:
-            CompanyAppRobot.create(
-                app_id=app_id,
-                company_id=company_id,
-                robot_url=robot_url
-            )
-        else:
-            company_robot.update(robot_url=robot_url)
 
     return Bizs.success()
