@@ -122,7 +122,7 @@ def edit_company(company_id, data):
     for company_app in company_apps:
         if company_app.expired_at > datetime.strptime(expired_at, "%Y-%m-%d %H:%M:%S"):
             return Bizs.success(
-                code=codes.CODE_BAD_REQUEST, http_code=codes.HTTP_BAD_REQUEST, msg="不能大于公司的过期时间"
+                code=codes.CODE_BAD_REQUEST, http_code=codes.HTTP_BAD_REQUEST, msg="企业到期时间不能小于应用到期时间"
             )
     company.update(
         name=data.get("name"),
@@ -211,7 +211,7 @@ def edit_a_company_permission(company_id, app_id, data):
 
     if datetime.strptime(expired_at, "%Y-%m-%d %H:%M:%S") > company.expired_at:
         return Bizs.success(
-            code=codes.CODE_BAD_REQUEST, http_code=codes.HTTP_BAD_REQUEST, msg="不能大于公司的过期时间"
+            code=codes.CODE_BAD_REQUEST, http_code=codes.HTTP_BAD_REQUEST, msg="应用到期时间不能大于企业到期时间"
         )
 
     role = Role.get_admin_role_by_company_id(company_id, is_admin=True)

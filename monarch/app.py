@@ -4,7 +4,8 @@ import time
 import traceback
 from marshmallow.exceptions import ValidationError
 
-from monarch.corelibs.backend import celery
+from celery import Celery
+
 from flask import Flask, current_app, request
 from flask_restplus import Api
 
@@ -26,6 +27,8 @@ from monarch.views.partner import register_partner_api
 from monarch import config
 
 api = Api()
+celery = Celery(__name__, backend=config.CELERY_RESULT_BACKEND, broker=config.BROKER_URL)
+
 
 LOGGING_CONFIG = {
     "version": 1,
@@ -60,8 +63,6 @@ def create_app(name=None, _config=None):
     if config.SENTRY_DSN and not config.DEBUG:
         Sentry(app, dsn=config.SENTRY_DSN)
 
-    celery.init_app(app)
-
     db.init_app(app)
     mc.init_app(app)
 
@@ -75,6 +76,14 @@ def create_app(name=None, _config=None):
     register_partner_api(app)
     setup_errorhandler(app)
 
+    celery.conf.update(app.config)
+
+    class ContextTask(celery.Task):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
     return app
 
 
