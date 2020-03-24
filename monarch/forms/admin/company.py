@@ -37,7 +37,6 @@ class EditCompanySchema(Schema):
 class CompanyResetPasswordSchema(Schema):
     admin_password = fields.Str(required=True, allow_none=False)
     new_password = fields.Str(required=True, allow_none=False, validate=PasswordValidator())
-    repeat_password = fields.Str(required=True, allow_none=False, validate=PasswordValidator())
 
 
 class SearchCompanySchema(SearchSchema, PaginationSchema):
