@@ -108,3 +108,5 @@ dump.rdb
 
 # celery
 celerybeat.pid
+
+local_settings.py

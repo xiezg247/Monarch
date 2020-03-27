@@ -1,4 +1,5 @@
 ## 项目介绍
+运营中心
 
 ## 项目结构
 ```python
@@ -103,9 +104,9 @@
 ```
 
 ## 编码规范
-- [开发规范](http://192.168.3.101/webot-dev/wiki/blob/master/docs/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83.md)
-- [提交规范](http://192.168.3.101/webot-dev/wiki/blob/master/docs/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/Git%E6%8F%90%E4%BA%A4%E8%A7%84%E8%8C%83.md)
-- [API设计](http://192.168.3.101/webot-dev/wiki/blob/master/docs/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/API%E8%AE%BE%E8%AE%A1.md)
+- [开发规范](https://gitlab.zhiyantek.com/webot-dev/wiki/blob/master/docs/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83.md)
+- [提交规范](https://gitlab.zhiyantek.com/webot-dev/wiki/blob/master/docs/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/Git%E6%8F%90%E4%BA%A4%E8%A7%84%E8%8C%83.md)
+- [API设计](https://gitlab.zhiyantek.com/webot-dev/wiki/blob/master/docs/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/API%E8%AE%BE%E8%AE%A1.md)
 
 ## 项目运行
 ### 创建数据库
@@ -113,7 +114,7 @@
 CREATE DATABASE `monarch` /*!40100 COLLATE 'utf8mb4_general_ci' */;
 ```
 
-### 创建数据表
+### 创建/更新数据表
 ```python
 python manage.py db revision -m "create user table"
 python manage.py db upgrade
@@ -128,13 +129,17 @@ python manage.py runserver -h 0.0.0.0 -p 5000
 ```python
 gunicorn -k gevent -t 10 -w 4 -b "0.0.0.0:8015" monarch.wsgi:application
 ```
+或
+```python
+gunicorn -c gunicorn_config.py monarch.wsgi:application
+```
 
 ### 启动celery worker
 ```python
-celery worker -A monarch.corelibs.backend.celery_worker --loglevel=INFO -c 4 -P gevent -Q celery
+celery worker -A manage.celery --loglevel=INFO -c 4 -P gevent -Q celery
 ```
 
 ### 启动celery beat
 ```python
-celery beat -A monarch.corelibs.backend.celery_worker --loglevel=INFO
+celery beat -A monarch.celery --loglevel=INFO
 ```

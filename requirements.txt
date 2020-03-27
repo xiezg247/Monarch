@@ -51,3 +51,9 @@ shortuuid==0.5.0
 
 # werkzeug  import bug
 werkzeug==0.16.0
+
+# PIL
+Pillow==4.1.0
+
+# captcha
+captcha==0.3

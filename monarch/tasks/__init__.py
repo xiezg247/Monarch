@@ -1,1 +1,1 @@
-from .form_id import *  # noqa
+from .push_app import *  # noqa
