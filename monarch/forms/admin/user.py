@@ -3,11 +3,11 @@ from marshmallow import fields, Schema
 from monarch.forms import SearchSchema, PaginationSchema
 
 
-class SearchAdminUserSchema(SearchSchema, PaginationSchema):
+class SearchUserSchema(SearchSchema, PaginationSchema):
     pass
 
 
-class AdminUserSchema(Schema):
+class UserSchema(Schema):
     id = fields.Str()
     account = fields.Str()
 

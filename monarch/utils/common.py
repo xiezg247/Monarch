@@ -5,8 +5,8 @@ import uuid
 from flask import request, g
 
 from monarch.corelibs.mcredis import mc
-from monarch.exc.consts import CACHE_ADMIN_USER_TOKEN
-from monarch.models.admin_user import AdminUser
+from monarch.exc.consts import CACHE_USER_TOKEN
+from monarch.models.user import User
 from monarch.utils.api import biz_success
 from monarch.exc import codes
 
@@ -20,12 +20,12 @@ def check_admin_login(view):
         biz_forbidden = partial(biz_success, code=codes.CODE_FORBIDDEN, http_code=codes.HTTP_FORBIDDEN)
         if not token:
             return biz_forbidden(msg="用户无权限")
-        cache_admin_user_token = CACHE_ADMIN_USER_TOKEN.format(token)
+        cache_admin_user_token = CACHE_USER_TOKEN.format(token)
         admin_user_id = mc.get(cache_admin_user_token)
         if not admin_user_id:
             return biz_forbidden(msg="token已过期")
 
-        admin_user = AdminUser.get(admin_user_id)
+        admin_user = User.get(admin_user_id)
         if not admin_user:
             return biz_forbidden(msg="用户不存在")
 

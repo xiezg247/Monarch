@@ -6,7 +6,7 @@ from marshmallow.exceptions import ValidationError
 
 from celery import Celery
 
-from flask import Flask, current_app, request
+from flask import Flask, current_app, request, g
 from flask_restplus import Api
 
 from raven.contrib.flask import Sentry
@@ -20,9 +20,9 @@ from monarch.exc.consts import DEFAULT_FAIL
 from monarch.exc import codes
 
 from monarch.utils.api import http_fail
+from monarch.utils.common import gen_random_key
 
 from monarch.views.admin import register_admin_conf_center
-from monarch.views.partner import register_partner_api
 
 from monarch import config
 
@@ -73,7 +73,6 @@ def create_app(name=None, _config=None):
     setup_after_request(app)
 
     register_admin_conf_center(app)
-    register_partner_api(app)
     setup_errorhandler(app)
 
     celery.conf.update(app.config)
@@ -134,9 +133,19 @@ def _request_log(resp, *args, **kws):
     now = time.time()
     request_start_time = getattr(request, "request_start_time", None)
     real_ip = request.headers.get("X-Real-Ip", request.remote_addr)
+    user = getattr(g, "user", None)
+    request_id = gen_random_key()
 
     response = resp.get_json(silent=True)
     code = response.get("code") if response else DEFAULT_FAIL
+
+    format_str = (
+        'request_time: %(request_time)s, remote_addr: %(remote_addr)s, '
+        'status_code: %(status_code)s code: %(code)s, method: %(method)s, url: %(url)s, '
+        'user_id: %(user_id)s, endpoint: %(endpoint)s, '
+        'args: %(args)s, form: %(form)s, json: %(json)s, '
+        'response: %(response)s, elapsed: %(elapsed)s, request_id: %(request_id)s'
+    )
 
     data = dict(
         request_time=str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())),
@@ -145,16 +154,18 @@ def _request_log(resp, *args, **kws):
         code=code,
         method=request.method,
         url=request.url,
+        user_id=user.id if user else None,
         endpoint=request.endpoint,
         args=request.args.to_dict(),
         form=request.form.to_dict(),
         json=request.json,
         response=response,
         elapsed=now - request_start_time if request_start_time else None,
+        request_id=request_id,
     )
 
     logger = logging.getLogger("request")
-    logger.info(data)
+    logger.info(format_str, data)
 
     return resp
 

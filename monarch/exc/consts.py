@@ -18,10 +18,7 @@ CACHE_MONTH = 60 * 60 * 24 * 30
 REQUESTS_TIMEOUT = 15
 
 # AdminUser
-CACHE_ADMIN_USER_TOKEN = "sso:admin_user:token:{}"  # 管理员token缓存
-
-# Company
-CACHE_COMPANY_INFO = "sso:company:info:{}"
+CACHE_USER_TOKEN = "monarch:user:token:{}"  # 管理员token缓存
 
 # Captcha
-CACHE_CAPTCHA_IMAGE_KEY = 'sso:captcha:image:{}'
+CACHE_CAPTCHA_IMAGE_KEY = 'monarch:captcha:image:{}'

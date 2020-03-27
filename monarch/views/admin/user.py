@@ -2,29 +2,28 @@ from flask import g
 from flask_restplus import Resource, Namespace
 from flask_restplus._http import HTTPStatus
 
-from monarch.forms.admin.admin_user import LoginSchema
-from monarch.forms.admin.company import SearchCompanySchema
-from monarch.service.admin.admin_user import login, logout, get_admin_user_list
+from monarch.forms.admin.user import LoginSchema, SearchUserSchema
+from monarch.service.admin.user import login, logout, get_user_list
 from monarch.utils.common import check_admin_login, expect_schema
 
 
-class AdminUserDto:
-    ns = Namespace("admin_user", description="管理员接口")
+class UserDto:
+    ns = Namespace("user", description="管理员接口")
 
 
-ns = AdminUserDto.ns
+ns = UserDto.ns
 
 
 @ns.route("")
-class AdminUserList(Resource):
+class UserList(Resource):
     @ns.response(code=HTTPStatus.OK.value, description="成功")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
     @ns.doc("管理员列表")
     @check_admin_login
-    @expect_schema(ns, SearchCompanySchema())
+    @expect_schema(ns, SearchUserSchema())
     def get(self):
         """管理员列表"""
-        return get_admin_user_list(g.data)
+        return get_user_list(g.data)
 
 
 @ns.route("/login")

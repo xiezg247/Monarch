@@ -1,10 +1,7 @@
 from monarch import config
 from flask import Blueprint
 from flask_restplus import Api
-from monarch.views.admin.company import ns as company_ns
-from monarch.views.admin.admin_user import ns as admin_user_ns
-from monarch.views.admin.permission import ns as permission_ns
-from monarch.views.admin.oauth2 import ns as oauth2_ns
+from monarch.views.admin.user import ns as user_ns
 from monarch.views.admin.captcha import ns as captcha_ns
 
 
@@ -18,7 +15,7 @@ authorizations = {
 
 
 def register_admin_conf_center(app):
-    blueprint = Blueprint("admin", __name__, url_prefix="/conf_center/v1")
+    blueprint = Blueprint("admin", __name__, url_prefix="/admin/v1")
     api = Api(
         blueprint,
         title="New API",
@@ -28,10 +25,7 @@ def register_admin_conf_center(app):
         security='apikey',
         doc=config.ENABLE_DOC,
     )
-    api.add_namespace(company_ns, path="/company")
-    api.add_namespace(admin_user_ns, path="/admin_user")
-    api.add_namespace(permission_ns, path="/permissions")
-    api.add_namespace(oauth2_ns, path="/oauth")
+    api.add_namespace(user_ns, path="/user")
     api.add_namespace(captcha_ns, path="/captcha")
 
     app.register_blueprint(blueprint)

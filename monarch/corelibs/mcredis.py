@@ -1,7 +1,7 @@
 import _pickle as cPickle
 import redis
 
-_CACHE_KEY_PREFIX = "sso:"
+_CACHE_KEY_PREFIX = "monarch:"
 
 
 def require_prefix(f):
