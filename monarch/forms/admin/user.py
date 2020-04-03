@@ -8,7 +8,7 @@ class SearchUserSchema(SearchSchema, PaginationSchema):
 
 
 class UserSchema(Schema):
-    id = fields.Str()
+    id = fields.Str(required=True)
     account = fields.Str()
 
 
