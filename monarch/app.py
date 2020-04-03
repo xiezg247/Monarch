@@ -7,7 +7,7 @@ from marshmallow.exceptions import ValidationError
 from celery import Celery
 
 from flask import Flask, current_app, request, g
-from flask_restplus import Api
+from flask_restx import Api
 
 from raven.contrib.flask import Sentry
 from sqlalchemy.exc import TimeoutError

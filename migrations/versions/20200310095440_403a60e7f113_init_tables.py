@@ -19,7 +19,7 @@ depends_on = None
 
 def upgrade():
     op.create_table(
-        "admin_user",
+        "user",
         Column(
             "created_at",
             DateTime(),
@@ -45,6 +45,39 @@ def upgrade():
     op.create_index('uq_account_deleted', 'user', ['account', 'deleted'], unique=True)
     op.create_index('idx_company_id', 'user', ['company_id'], unique=False)
 
+    op.create_table(
+        "company",
+        Column(
+            "created_at",
+            DateTime(),
+            nullable=False,
+            default=datetime.now,
+            comment="创建时间",
+        ),
+        Column(
+            "updated_at",
+            DateTime(),
+            nullable=False,
+            default=datetime.now,
+            onupdate=datetime.now,
+            comment="更新时间",
+        ),
+        Column("deleted", Boolean(), nullable=False, default=False, comment="是否删除"),
+        Column(
+            "id",
+            Integer(),
+            nullable=False,
+            autoincrement=True,
+            primary_key=True,
+            comment="公司ID",
+        ),
+        Column("code", String(32), nullable=False, comment="公司编码"),
+        Column("name", String(128), nullable=True, comment="公司名称"),
+        Column("remark", String(255), nullable=True, comment="企业描述"),
+        Column("logo", String(255), nullable=True, default=None, comment="企业logo")
+    )
+
 
 def downgrade():
-    op.drop_table("admin_user")
+    op.drop_table("user")
+    op.drop_table("company")

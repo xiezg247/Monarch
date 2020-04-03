@@ -1,10 +1,10 @@
-from flask import g
+from flask import request
 from flask_restplus import Resource, Namespace
-from flask_restplus._http import HTTPStatus
+from monarch.corelibs.schema2doc import accepts, responds
 
-from monarch.forms.admin.user import LoginSchema, SearchUserSchema
+from monarch.forms.admin.user import LoginSchema, SearchUserSchema, UserSchema
 from monarch.service.admin.user import login, logout, get_user_list
-from monarch.utils.common import check_admin_login, expect_schema
+from monarch.utils.common import check_admin_login
 
 
 class UserDto:
@@ -16,31 +16,22 @@ ns = UserDto.ns
 
 @ns.route("")
 class UserList(Resource):
-    @ns.response(code=HTTPStatus.OK.value, description="成功")
-    @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
-    @ns.doc("管理员列表")
-    @check_admin_login
-    @expect_schema(ns, SearchUserSchema())
+    @accepts(schema=SearchUserSchema(), api=ns, location="query")
+    @responds(schema=UserSchema(many=True), api=ns)
     def get(self):
         """管理员列表"""
-        return get_user_list(g.data)
+        return get_user_list(request.parsed_obj)
 
 
 @ns.route("/login")
 class Login(Resource):
-    @ns.response(code=HTTPStatus.OK.value, description="成功")
-    @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
-    @ns.doc("登录")
-    @expect_schema(ns, LoginSchema())
+    @accepts(schema=LoginSchema(), api=ns)
     def post(self):
-        return login(g.data)
+        return login(request.parsed_obj)
 
 
 @ns.route("/logout")
 class Logout(Resource):
-    @ns.response(code=HTTPStatus.OK.value, description="成功")
-    @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
-    @ns.doc("注销")
     @check_admin_login
     def post(self):
         """注销"""

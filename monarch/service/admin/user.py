@@ -16,7 +16,7 @@ def get_user_list(data):
 
     _result, _pagination = pagi_data.get("result"), pagi_data.get("pagination")
 
-    admin_user_data = UserSchema().dump(_result, many=True).data
+    admin_user_data = UserSchema().dump(_result, many=True)
     return Bizs.success({"result": admin_user_data, "pagination": _pagination})
 
 
