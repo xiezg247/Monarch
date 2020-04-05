@@ -20,7 +20,7 @@ from monarch.exc.consts import DEFAULT_FAIL
 from monarch.exc import codes
 
 from monarch.utils.api import http_fail
-from monarch.utils.common import gen_random_key
+from monarch.utils.tools import gen_random_key
 
 from monarch.views.admin import register_admin_conf_center
 

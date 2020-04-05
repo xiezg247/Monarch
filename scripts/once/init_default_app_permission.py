@@ -5,7 +5,7 @@ import sys
 sys.path.insert(0, '../..')
 
 from monarch import config
-from monarch.utils.common import gen_random_key
+from monarch.utils.tools import gen_random_key
 from monarch.app import create_app
 from monarch.models.menu import Menu
 from monarch.models.permission import AppPermission

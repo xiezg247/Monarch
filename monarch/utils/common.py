@@ -1,6 +1,4 @@
 from functools import wraps, partial
-import hashlib
-import uuid
 
 from flask import request, g
 
@@ -33,8 +31,3 @@ def check_admin_login(view):
         return view(*args, **kwargs)
 
     return wrapper
-
-
-def gen_random_key():
-    """生成32位随机数"""
-    return hashlib.md5(str(uuid.uuid4()).encode("utf-8")).hexdigest()
