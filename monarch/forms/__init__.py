@@ -2,20 +2,20 @@ from marshmallow import Schema, fields
 
 
 class SearchSchema(Schema):
-    keyword = fields.Str()
-    query_field = fields.Str()
+    keyword = fields.Str(description="关键字")
+    query_field = fields.Str(description="查询字段")
 
 
 class PaginationSchema(Schema):
-    page = fields.Str()
-    per_page = fields.Str()
+    page = fields.Int(required=True, description="第几页")
+    per_page = fields.Int(required=True, description="每页数量")
 
 
 class SortSchema(Schema):
-    sort = fields.Int()
-    sort_field = fields.Str()
+    sort = fields.Int(description="序号")
+    sort_field = fields.Str(description="排序字段")
 
 
 class DateSchema(Schema):
-    start = fields.Int()
-    end = fields.Int()
+    start = fields.Int(description="开始时间")
+    end = fields.Int(description="结束时间")

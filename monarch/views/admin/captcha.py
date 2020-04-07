@@ -1,5 +1,4 @@
-from flask_restplus import Namespace
-from flask_restplus import Resource
+from flask_restplus import Namespace, Resource
 
 from monarch.service.admin.captcha import get_captcha
 

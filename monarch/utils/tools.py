@@ -1,3 +1,4 @@
+import hashlib
 import uuid
 import random
 
@@ -24,3 +25,8 @@ class CustomImageCaptcha(ImageCaptcha):
         im = self.create_captcha_image(chars, color, background)
         im = im.filter(ImageFilter.SMOOTH)
         return im
+
+
+def gen_random_key():
+    """生成32位随机数"""
+    return hashlib.md5(str(uuid.uuid4()).encode("utf-8")).hexdigest()
