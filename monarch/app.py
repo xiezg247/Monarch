@@ -23,6 +23,7 @@ from monarch.utils.api import http_fail
 from monarch.utils.tools import gen_random_key
 
 from monarch.views.admin import register_admin_conf_center
+from monarch.views.admin_auth import register_admin_auth_center
 
 from monarch import config
 
@@ -73,6 +74,7 @@ def create_app(name=None, _config=None):
     setup_after_request(app)
 
     register_admin_conf_center(app)
+    register_admin_auth_center(app)
     setup_errorhandler(app)
 
     celery.conf.update(app.config)
