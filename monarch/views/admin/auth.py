@@ -9,14 +9,14 @@ from monarch.utils.schema2doc import expect
 ns = Namespace("auth", description="登录登出接口")
 
 
-@ns.route("/login")
+@ns.route("login")
 class Login(Resource):
     @expect(schema=LoginSchema(), api=ns)
     def post(self):
         return login(request.data)
 
 
-@ns.route("/logout")
+@ns.route("logout")
 class Logout(Resource):
     @check_admin_login
     def post(self):
