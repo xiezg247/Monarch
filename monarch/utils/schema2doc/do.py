@@ -94,15 +94,18 @@ def schema_to_doc(api, query_schema, schema, location="values"):
         return api.expect(_parser)
 
 
-def form_validate(schema):
+def form_validate(query_schema, schema):
     """接口请求参数验证"""
 
     def wrapper(view):
         @wraps(view)
         def view_wrapper(*args, **kw):
+            args_data, body_data = {}, {}
             try:
-                r_params = request.args if request.method == "GET" else (request.json or {})
-                data = schema.load(r_params)
+                if query_schema:
+                    args_data = query_schema.load(request.args)
+                if schema:
+                    body_data = schema.load(request.json or {})
             except ValidationError as ex:
                 errors = {"schema_errors": ex.messages}
                 return biz_success(
@@ -111,7 +114,8 @@ def form_validate(schema):
                     data=errors,
                 )
 
-            request.data = data
+            request.args_data = args_data
+            request.body_data = body_data
             return view(*args, **kw)
 
         return view_wrapper
@@ -126,7 +130,7 @@ def expect(api=None,
     """类似flask-restful的expect"""
     def wrapper(view):
         view = schema_to_doc(api, query_schema, schema)(view)
-        return form_validate(schema)(view)
+        return form_validate(query_schema, schema)(view)
 
     return wrapper
 

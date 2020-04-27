@@ -15,4 +15,4 @@ class UserList(Resource):
     @response(schema=UserSchema(many=True), api=ns, validate=True)
     def get(self):
         """管理员列表"""
-        return get_user_list(request.data)
+        return get_user_list(request.args_data, request.body_data)
