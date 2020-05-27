@@ -1,3 +1,5 @@
+## Monarch
+[![Build Status](https://travis-ci.com/xiezg247/Monarch.svg?branch=master)](https://travis-ci.com/xiezg247/Monarch)
 ## 项目介绍
 运营中心
 
