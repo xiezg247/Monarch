@@ -1,4 +1,4 @@
-FROM rackspacedot/python37
+FROM podshumok/python36
 
 WORKDIR /app
 RUN export PYTHONIOENCODING=utf8
