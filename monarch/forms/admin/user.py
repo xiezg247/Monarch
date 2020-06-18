@@ -10,3 +10,7 @@ class SearchUserSchema(SearchSchema, PaginationSchema):
 class UserSchema(Schema):
     id = fields.Str(required=True)
     account = fields.Str()
+
+
+class AddUserSchema(Schema):
+    account = fields.Str()

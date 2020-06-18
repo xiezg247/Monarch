@@ -1,5 +1,5 @@
 import logging
-import logging.config
+from logging import config as log_config
 import time
 import traceback
 from marshmallow.exceptions import ValidationError
@@ -87,7 +87,7 @@ def create_app(name=None, _config=None):
 
 
 def init_logging(app):
-    logging.config.dictConfig(LOGGING_CONFIG)
+    log_config.dictConfig(LOGGING_CONFIG)
 
 
 def setup_errorhandler(app):

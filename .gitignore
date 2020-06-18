@@ -110,3 +110,4 @@ dump.rdb
 celerybeat.pid
 
 local_settings.py
+/htmlcov

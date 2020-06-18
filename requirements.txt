@@ -57,3 +57,6 @@ Pillow==4.1.0
 
 # captcha
 captcha==0.3
+
+# coverage
+coverage==4.4.1
