@@ -2,8 +2,7 @@ version: '2'
 
 services:
   monarch:
-    build: ./
-    image: kw1073/monarch:1592499948
+    image: kw1073/monarch:${TAG_VERSION}
     ports:
       - "5000:5000"
     environment:

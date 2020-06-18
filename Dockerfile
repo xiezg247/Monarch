@@ -1,4 +1,4 @@
-FROM podshumok/python36
+FROM tbeadle/gunicorn-nginx:3.6
 
 WORKDIR /app
 RUN export PYTHONIOENCODING=utf8
