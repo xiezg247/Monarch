@@ -14,7 +14,9 @@ cache:
   - pip
 
 script:
-  - bash runtest.sh
+  - python manage.py flake8
+  - python manage.py cov
+  - python manage.py test
 
 #after_success:
   # 当代码测试通过后执行的命令
