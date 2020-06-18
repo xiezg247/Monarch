@@ -106,9 +106,9 @@
 ```
 
 ## 编码规范
-- [开发规范](https://gitlab.zhiyantek.com/webot-dev/wiki/blob/master/docs/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83.md)
-- [提交规范](https://gitlab.zhiyantek.com/webot-dev/wiki/blob/master/docs/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/Git%E6%8F%90%E4%BA%A4%E8%A7%84%E8%8C%83.md)
-- [API设计](https://gitlab.zhiyantek.com/webot-dev/wiki/blob/master/docs/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/API%E8%AE%BE%E8%AE%A1.md)
+- [开发规范](doc/开发规范.md)
+- [提交规范](doc/Git提交规范.md)
+- [API设计](doc/API设计.md)
 
 ## 项目运行
 ### 创建数据库
