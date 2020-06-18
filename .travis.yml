@@ -2,9 +2,21 @@ language: python
 
 python:
   - "3.6"
+
+#before_script:
+  # 登录到 docker hub
+#  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
 install:
   - pip install -r requirements.txt
-script:
-  - bash runtest.sh
+
 cache:
   - pip
+
+script:
+  - bash runtest.sh
+
+#after_success:
+  # 当代码测试通过后执行的命令
+#  - docker build -t "$DOCKER_USERNAME"/alpine .
+#  - docker push "$DOCKER_USERNAME"/alpine
