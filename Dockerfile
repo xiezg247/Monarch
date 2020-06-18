@@ -1,4 +1,4 @@
-FROM registry.cn-beijing.aliyuncs.com/k8s-webot/base:python36
+FROM rackspacedot/python37
 
 WORKDIR /app
 RUN export PYTHONIOENCODING=utf8

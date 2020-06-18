@@ -1,11 +1,14 @@
 language: python
 
+env:
+  - TAG_VERSION=$(date +%s)
+
 python:
   - "3.6"
 
-#before_script:
+before_script:
   # 登录到 docker hub
-#  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 install:
   - pip install -r requirements.txt
@@ -14,9 +17,11 @@ cache:
   - pip
 
 script:
-  - bash runtest.sh
+  - python manage.py flake8
+  - python manage.py cov
+  - python manage.py test
 
-#after_success:
+after_success:
   # 当代码测试通过后执行的命令
-#  - docker build -t "$DOCKER_USERNAME"/alpine .
-#  - docker push "$DOCKER_USERNAME"/alpine
+  - docker build -t $DOCKER_USERNAME/$PROJECT_NAME:$TAG_VERSION .
+  - docker push $DOCKER_USERNAME/$PROJECT_NAME:$TAG_VERSION

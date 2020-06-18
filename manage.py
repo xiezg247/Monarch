@@ -55,7 +55,7 @@ def cov():
 def test():
     """
     Runs the unit tests without generating a coverage report.
-    Enter 'docker-compose run --rm flask python manage.py test' to run all the tests in the
+    Enter 'python manage.py test' to run all the tests in the
     'tests' directory, with no coverage report.
     :return int: 0 if all tests pass, 1 if not
     """
@@ -72,9 +72,8 @@ def test():
 def test_one(test_file):
     """
     Runs the unittest without generating a coverage report.
-    Enter 'docker-compose run --rm flask python manage.py test_one <NAME_OF_FILE>' to run only
+    Enter 'python manage.py test_one <NAME_OF_FILE>' to run only
     one test file in the 'tests' directory. It provides no coverage report.
-    Example: 'docker-compose run --rm flask python manage.py test_one test_website'
     Note that you do not need to put the extension of the test file.
     :return int: 0 if all tests pass, 1 if not
     """
@@ -90,7 +89,10 @@ def test_one(test_file):
 # flake8
 @manager.command
 def flake8():
-    """Run flake8 tests"""
+    """
+    Runs the flake8
+    Enter 'python manage.py test' to run code
+    """
     from subprocess import call
     print('flake8 checking:')
     return call(['flake8',
