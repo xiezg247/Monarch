@@ -1,5 +1,8 @@
 language: python
 
+env:
+  - VERSION=$(date +%s)
+
 python:
   - "3.6"
 
@@ -20,5 +23,5 @@ script:
 
 after_success:
   # 当代码测试通过后执行的命令
-  - docker build -t $DOCKER_USERNAME/alpine .
-  - docker push $DOCKER_USERNAME/alpine
+  - docker build -t $DOCKER_USERNAME/$PROJECT_NAME:$VERSION .
+  - docker push $DOCKER_USERNAME/$PROJECT_NAME:$VERSION
