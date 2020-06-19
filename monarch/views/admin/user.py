@@ -12,12 +12,12 @@ ns = Namespace("user", description="管理员接口")
 
 @ns.route("")
 class UserList(Resource):
-    @expect(query_schema=SearchUserSchema(), schema=SearchUserSchema(), api=ns)
+    @expect(query_schema=SearchUserSchema(), api=ns)
     @response(schema=UserSchema(many=True), api=ns, validate=True)
     @check_admin_login
     def get(self):
         """管理员列表"""
-        return get_user_list(request.args_data, request.body_data)
+        return get_user_list(request.args_data)
 
     @expect(schema=AddUserSchema(), api=ns)
     @check_admin_login

@@ -136,7 +136,7 @@ def _request_log(resp, *args, **kws):
     user = getattr(g, "user", None)
     request_id = gen_random_key()
 
-    response = resp.get_json(silent=True)
+    response = resp.get_json()
     code = response.get("code") if response else DEFAULT_FAIL
 
     format_str = (

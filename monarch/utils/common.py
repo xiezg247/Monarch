@@ -14,12 +14,11 @@ def _check_user_login(access_token):
     if not access_token:
         return False, biz_forbidden(msg="用户无权限")
 
-    user_info = mc.get(CACHE_USER_TOKEN.format(access_token=access_token))
-    if not user_info:
+    user_id = mc.get(CACHE_USER_TOKEN.format(access_token))
+    if not user_id:
         return False, biz_forbidden(msg="用户无权限")
 
-    user_id = user_info.get("id")
-    user = User.get_by_id(user_id)
+    user = User.get(user_id)
     if not user:
         return False, biz_forbidden(msg="用户不存在")
 
