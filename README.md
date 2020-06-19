@@ -40,6 +40,7 @@ gunicorn -c gunicorn_config.py monarch.wsgi:application
 celery worker -A manage.celery --loglevel=INFO -c 4 -P gevent -Q celery
 ```
 
+
 ### 启动celery beat
 ```python
 celery beat -A monarch.celery --loglevel=INFO
