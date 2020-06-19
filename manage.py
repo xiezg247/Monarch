@@ -5,6 +5,7 @@ from flask_script import Manager
 
 from monarch.app import create_app
 from monarch.corelibs.store import db
+from monarch.corelibs.mcredis import mc
 
 application = create_app('monarch')
 application.config['DEBUG'] = True
@@ -100,6 +101,32 @@ def flake8():
                  '--exclude=__pycache__,',
                  '--show-source',
                  '--ignore=E402,E305,W503'])
+
+
+@manager.command
+def syncdb():
+    """
+    Enter 'python manage.py syncdb' to sync all tables
+    """
+    with application.test_request_context():
+        from monarch.models.company import Company  # noqa
+        from monarch.models.user import User  # noqa
+        db.create_all()
+        db.session.commit()
+        print('Database created.')
+
+
+@manager.command
+def dropdb():
+    """
+    Enter 'python manage.py dropdb' to drop all tables
+    """
+    with application.test_request_context():
+        from monarch.models.company import Company  # noqa
+        from monarch.models.user import User  # noqa
+        db.drop_all()
+        mc.flushdb()
+        print('Database droped.')
 
 
 if __name__ == '__main__':
