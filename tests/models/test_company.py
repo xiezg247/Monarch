@@ -1,3 +1,6 @@
+"""
+核心代码
+"""
 import unittest
 from monarch.models.company import Company
 from tests.base import TestCase

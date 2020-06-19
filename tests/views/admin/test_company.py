@@ -1,3 +1,6 @@
+"""
+核心业务
+"""
 from monarch.models.user import User
 from tests.base import TestCase
 
