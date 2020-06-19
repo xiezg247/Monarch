@@ -4,6 +4,7 @@ from flask_restplus import Api
 
 from monarch.utils.common import _check_user_login
 from monarch.views.admin.user import ns as user_ns
+from monarch.views.admin.company import ns as company_ns
 from monarch.views.admin.captcha import ns as captcha_ns
 from monarch.views.admin.auth import ns as auth_ns
 
@@ -44,6 +45,7 @@ def register_admin(app):
         doc=config.ENABLE_DOC,
     )
     api.add_namespace(user_ns, path="/user")
+    api.add_namespace(company_ns, path="/company")
     api.add_namespace(captcha_ns, path="/captcha")
     api.add_namespace(auth_ns, path="/")
 

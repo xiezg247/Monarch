@@ -51,26 +51,6 @@ class TestCase(unittest.TestCase):
         with self.app.test_request_context():
             return url_for(*args, **kwargs)
 
-    def _create_user(self, company_id, account, password):
-        with Lock():
-            with self.app.test_request_context():
-                user = User.create(
-                    id=gen_id(),
-                    company_id=company_id,
-                    password=password,
-                    account=account,
-                )
-                return user
-
-    def _create_company(self, code, name):
-        with Lock():
-            with self.app.test_request_context():
-                company = Company.create(
-                    code=code,
-                    name=name,
-                )
-                return company
-
     def _login_admin(self, user_id):
         import shortuuid
 

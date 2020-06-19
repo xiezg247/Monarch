@@ -8,6 +8,12 @@ from monarch.models.user import User
 from monarch.utils.api import Bizs
 
 
+def generate_token(user_id):
+    token = shortuuid.uuid()
+    mc.set(CACHE_USER_TOKEN.format(token), user_id, CACHE_TWELVE_HOUR)
+    return token
+
+
 def login(data):
     account = data.get("account")
     password = data.get("password")
@@ -28,8 +34,7 @@ def login(data):
     if not user.check_password(password):
         return Bizs.bad_query(code=codes.CODE_BAD_REQUEST, http_code=codes.HTTP_BAD_REQUEST, msg="账号密码错误")
 
-    token = shortuuid.uuid()
-    mc.set(CACHE_USER_TOKEN.format(token), user.id, CACHE_TWELVE_HOUR)
+    token = generate_token(user.id)
 
     result = {
         'token': token,
