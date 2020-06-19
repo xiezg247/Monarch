@@ -1,5 +1,9 @@
 """
-核心业务
+核心业务 --> api 接口
+核心功能 --> model 底层逻辑
+不易理解/复杂 --> ip_check/算法/复杂功能逻辑
+易出错 --> 多渠道模板
+公共代码 --> http/返回/错误等封装
 """
 from monarch.models.user import User
 from tests.base import TestCase

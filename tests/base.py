@@ -1,15 +1,11 @@
 import json
 import unittest
-from threading import Lock
 from flask import url_for, current_app
 from flask.wrappers import Response
 from monarch.app import create_app
 from monarch.corelibs.store import db
 from monarch.corelibs.mcredis import mc
 from monarch.exc.consts import CACHE_USER_TOKEN, CACHE_TWELVE_HOUR
-from monarch.models.company import Company
-from monarch.models.user import User
-from monarch.utils.tools import gen_id
 
 
 class TestResponse(Response):
